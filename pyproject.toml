@@ -1,0 +1,36 @@
+[project]
+name = "prompt-optimization-lab"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "dspy==3.0.3",
+    "autogen-agentchat>=0.7.4",
+    "autogen-ext[azure,diskcache,openai,redis]>=0.7.4",
+    "ujson",
+    "pandas",
+    "faiss-cpu>=1.12.0",
+    "bm25s>=0.2.14",
+    "pystemmer>=3.0.0",
+    "yfinance>=0.2.66",
+    "langchain>=0.3.27",
+    "langchain-community>=0.3.30",
+    "pandas-datareader>=0.10.0",
+    "fredapi>=0.5.2",
+    "requests>=2.32.5",
+    "streamlit>=1.50.0",
+    "azure-search-documents>=11.5.3",
+    "azure-identity>=1.25.0",
+    "aiohttp>=3.12.15",
+    "azure-core>=1.35.1",
+    "typing-extensions>=4.15.0",
+    "pydantic>=2.12.5",
+]
+
+[dependency-groups]
+dev = [
+    "dspy==3.0.3",
+    "ipykernel>=7.1.0",
+    "jupyter>=1.1.1",
+]
