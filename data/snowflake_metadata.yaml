@@ -1,0 +1,2246 @@
+allowed_values_config:
+  max_values: 100
+  exclude_patterns: []
+  include_null_equivalent: false
+views:
+  ACTIVE_DEAL_LIST_VW:
+    view_name: Active Deal List
+    description: This view contains a list of all deals that are available for consideration
+      and previously closed deals, and their expected investment size and expected
+      rate of return. This table contains TARGET information and There are no details
+      in this entity on existing financial performance, returns, current valuations
+      or the share price.
+    selector: Use this view when the question references an active deal, or the current
+      deal. Use this view when the query involves ongoing deals, particularly when
+      discussing target metrics such as target internal rate of return (IRR), initial
+      investment size, ticket size, target moic, platform-specific details, or any
+      characteristics related to deals that are in progress.**ALSO use as fallback
+      when aggregated views cannot provide sufficient filter coverage for deal-level
+      analysis.** Additionally, use this view when the query wants to obtain the expected
+      rate of returns, and other financial metrics for the current deal, or other
+      active deals. Data for investments exists in other views. If the deal does not
+      exist in this view, instead, use other investment views.
+    columns:
+      DEAL_ID:
+        definition: A unique identifier that is automatically generated for each deal
+      DEAL_NAME:
+        definition: An internal name assigned to a deal to ensure confidentiality
+      SHORT_DESCR:
+        definition: A short description of a deal
+      PLATFORM:
+        definition: Mubadala’s Business Platform, Corporate Platform or Group CEO
+          & Managing Director Platform
+        include_allowed_values: true
+      PARTNERS:
+        definition: A Partner (or Fund Manager) responsible for managing the trading
+          activities of the fund. The primary counterparty or organization directly
+          involved in a specific investment. If the prompt refers to 'Partner', you
+          can use this column. As multiple partners may be listed, use partial matching
+          (%) to retrieve relevant investments.
+      BUSINESS_UNIT:
+        definition: Any subdivision of a Business Platform, which is headed by an
+          Executive Director or any individual designated by the relevant Business
+          Platform CEO to carry out the authorities of such function within their
+          Units.
+        include_allowed_values: true
+      SECTOR:
+        definition: Economic sector or industry classification for the investment
+        include_allowed_values: true
+      ASSET_CLASS:
+        definition: A grouping of investments that exhibit similar characteristics
+          and are subject to the same laws and regulations. These include Public Equity,
+          Venture Capital, Private Equity, Real Estate, Infrastructure, Bonds, Credit,
+          Hedge Funds, Derivatives and Cash
+        include_allowed_values: true
+      TARGET_IRR_RANGE:
+        definition: Expected internal rate of return range for the investment
+      DEAL_STATUS:
+        definition: The status of a deal, if active, on hold, passed, lost, canceled
+          or closed
+        include_allowed_values: true
+      INVESTMENT_CLASS:
+        definition: A class of an investment.
+        include_allowed_values: true
+      DEAL_STAGE:
+        definition: Stage of the deal in the investment lifecycle. Closed deals Mubadala
+          no longer has an interest in or a stake in. The deal pipeline is considered
+          to be deals up to and including the signing stage.
+        include_allowed_values: true
+      DEAL_LEAD:
+        definition: The investment professional leading the deal from origination,
+          structuring and negotiation, through to approval and execution
+      FINAL_APPROVING_COMMITTEE:
+        definition: Committee the deal needs to be presented to for approval.
+      FINAL_APPROVING_COMMITTEE_PRES_DATE:
+        definition: Date the deal is presented to the final approving committee. Use
+          this as the proposed completion year for the deal being finalised. Formatted
+          YYYY-MM-DD.
+      TARGET_IRR:
+        definition: The desired target percentage Internal Rate of Return (IRR) on
+          this deal. When users ask for 'IC Case IRR', they are referring to TARGET_IRR.
+      TARGET_MOIC:
+        definition: The desired target Multiple on Investment Capital (MOIC or also
+          known as TVPI) on the deal. This is the ratio of the total value (distributions
+          + residual value) relative to the total capital contributed by investors.
+          Expressed as a decimal, where positive values indicate total value exceeding
+          paid-in capital, and negative values indicate total value below paid-in
+          capital. When users ask for 'IC Case MOIC', they are referring to TARGET_MOIC.
+      INVESTMENT_SIZE_USD:
+        definition: Value of initial input investment (in millions) that Mubadala
+          will make in the investment in USD. This is not the return on the investment.
+      INVESTMENT_SIZE_AED:
+        definition: Value of initial input investment (in millions) that Mubadala
+          will make in the investment in AED. This is not the return on the investment.
+      OWNERSHIP_STAKE:
+        definition: The percentage of target Mubadala stake to be owned in a company
+      GICS_INDUSTRY:
+        definition: Level 3 Global Industry Classification Standard
+        include_allowed_values: true
+      GICS_INDUSTRY_GROUP:
+        definition: Level 2 Global Industry Classification Standard
+        include_allowed_values: true
+      GICS_SECTOR:
+        definition: Level 1 Global Industry Classification Standard
+        include_allowed_values: true
+      GICS_SUBINDUSTRY:
+        definition: Level 4 Global Industry Classification Standard
+      GEOGRAPHY:
+        definition: 'For direct investments: country where HQ is located. For Fund
+          investments: country of GP. Do NOT use this column in SQL ''WHERE'' filtering,
+          instead use COUNTRY_ISO_CODE2 or COUNTRY_ISO_CODE3 with the corresponding
+          code.'
+        include_allowed_values: true
+      REGION_OF_FUND:
+        definition: Region of focus according to the fund's investment strategy
+        include_allowed_values: true
+      COUNTRY_ISO_CODE2:
+        definition: Standardized country Iso code2. Use this column in SQL 'WHERE'
+          filtering instead of COUNTRY.
+      COUNTRY_ISO_CODE3:
+        definition: Standardized country Iso code3. Use this column in SQL 'WHERE'
+          filtering instead of COUNTRY.
+      READINESS:
+        definition: If deal status is Active and IRR, MOIC, geography, investment
+          class, asset class and ticket price are filled against the deal, it will
+          be marked as READY TO PICK, otherwise it will mark as DATA INCOMPLETE.
+  INVESTMENT_KPI_VW:
+    view_name: Investment KPI View
+    description: This view contains TIMESTAMPED key performance indicators for each
+      investment that Mubadala has made. It includes the internal rate of return (IRR),
+      Multiple on Investment Capital (MOIC or TVPI), Value Creation, DVPI, RVPI, Loss
+      Ratio and other financial metrics. These metrics are at an individual investment
+      level. Additionally, this view includes the region of the fund, country, asset
+      class, investment. This table contains timestamped data for each investment
+      at regular intervals within the financial years - only take the latest data
+      for each deal unless the user is asking how it has changed overtime or a specific
+      time interval.
+    selector: Use this view if a question references an investment or a historical
+      deal, but not the current deal, specifically at a historical deal level or is
+      requesting historical deals / investments that match a particular filter.**ALSO
+      use as fallback when aggregated views lack required filter dimensions . Common
+      uses include questions related to the financial performance of a specific investment,
+      the return on investment, the internal rate of return, the multiple on investment
+      capital, and other financial metrics. Use this view when the question is related
+      to the performance of a specific investment or historical deal. If the question
+      is related to the performance of a platform or business unit, use appropriate
+      platform or business unit KPI views. Always use this view in parallel, if you
+      use the 'ACTIVE_DEAL_LIST_VW'.
+    columns:
+      INVESTMENT_ID:
+        definition: Unique identifier for each investment
+      INVESTMENT_NAME:
+        definition: Name of the investment
+      PLATFORM:
+        definition: Mubadala’s Business Platform, Corporate Platform or Group CEO
+          & Managing Director Platform
+        include_allowed_values: true
+      BUSINESS_UNIT:
+        definition: Any subdivision of a Business Platform, which is headed by an
+          Executive Director or any individual designated by the relevant Business
+          Platform CEO to carry out the authorities of such function within their
+          Units.
+        include_allowed_values: true
+      SECTOR:
+        definition: Industry sector of the investment
+        include_allowed_values: true
+      ASSET_CLASS:
+        definition: A grouping of investments that exhibit similar characteristics
+          and are subject to the same laws and regulations. These include Public Equity,
+          Venture Capital, Private Equity, Real Estate, Infrastructure, Bonds, Credit,
+          Hedge Funds, Derivatives and Cash
+        include_allowed_values: true
+      REGION:
+        definition: Geographic region of the investment
+        include_allowed_values: true
+      COUNTRY:
+        definition: Name of country associated with the investment in non-abbreviated
+          form. NEVER NOT use this column for SQL 'WHERE' filtering. Always use COUNTRY_ISO_CODE2
+          or COUNTRY_ISO_CODE3 with the corresponding code instead.
+        include_allowed_values: true
+      VINTAGE_YEAR:
+        definition: Year when the investment was made
+      INVESTMENT_STATUS:
+        definition: Status of current investment, whether it is currently Active,
+          has been Exited. Should not be used to filter historical investments unless
+          explicitly requested
+      IRR:
+        definition: Internal Rate of Return - percentage return on investment
+      MOIC:
+        definition: Multiple on Invested Capital - ratio of total value to invested
+          capital
+      TVPI:
+        definition: Total Value to Paid-in Capital ratio
+      DPI:
+        definition: Distributions to Paid-in Capital ratio
+      RVPI:
+        definition: The Residual Value to Paid-In Capital (RVPI). This is the ratio
+          of the remaining value of an investment fund (unrealized gains) to the total
+          capital contributed by investors. It reflects the unrealized returns of
+          the fund. Expressed as a decimal, where positive values indicate residual
+          value exceeding paid-in capital, and negative values indicate residual value
+          below paid-in capital.
+      AS_ON_DATE_ID:
+        definition: Date the calculation was made expressed in the form YYYYMMDD.
+          Always take the latest entry by date, unless asked to compare across dates,
+          or the question targets a different time range or multi-years worth of data
+          is needed for a calculation.
+      YEAR:
+        definition: Year the calculation was made expressed in the form YYYY.
+      RECORD_TYPE:
+        definition: Record type indicating the period for calculation - includes quarterly
+          data (Q1, Q2, Q3, Q4) and year-to-date (YTD) information. This field helps
+          identify whether the metrics are for a specific quarter or cumulative year-to-date
+          performance.
+      GICS_SECTOR:
+        definition: Level 1 Global Industry Classification Standard
+        include_allowed_values: true
+      GICS_INDUSTRY_GROUP:
+        definition: Level 2 Global Industry Classification Standard
+        include_allowed_values: true
+      GICS_INDUSTRY:
+        definition: Level 1 Global Industry Classification Standard
+        include_allowed_values: true
+      GICS_SUBINDUSTRY:
+        definition: Level 4 Global Industry Classification Standard
+      PROJECT_NAME:
+        definition: A name of the deal / investment that Mubadala holds.
+      DEAL_ID:
+        definition: A unique identifier that is automatically generated for each deal.
+          There may be multiple entries for each DEAL_ID at a different point in time.
+          DEAL_ID is the PARTITION for this TIMESERIES data.
+      COUNTRY_ISO_CODE2:
+        definition: Standardized country Iso code2. Use this column in SQL 'WHERE'
+          filtering instead of COUNTRY.
+      COUNTRY_ISO_CODE3:
+        definition: Standardized country Iso code3. Use this column in SQL 'WHERE'
+          filtering instead of COUNTRY.
+      REGION_OF_FUND:
+        definition: Region of focus according to the fund's investment strategy 
+      CO_INVESTMENT:
+        definition: Is this a co - investment
+      INVESTMENT_CLASS:
+        definition: A class of an investment.
+        include_allowed_values: true
+      PROJECT_STATUS:
+        definition: Status of current project
+      EXTERNAL_MANAGER_GP:
+        definition: The General Partner typically delegates the management of the
+          fund to the Manager, but sometimes retains this role itself. It is common
+          for the General Partner and the Manager to be affiliates. This typically
+          applies to Private/Public Fund in investment class.
+      PARTNERS:
+        definition: A Partner (or Fund Manager) responsible for managing the trading
+          activities of the fund. The primary counterparty or organization directly
+          involved in a specific investment. If the prompt refers to 'Partner', you
+          can use this column. As multiple partners may be listed, use partial matching
+          (%) to retrieve relevant investments.
+      DEPLOYMENT_MODEL:
+        definition: The model for the investment that Mubadala has chosen to use.
+          This can be Co Investment, Direct Investment or External manager
+      OWNERSHIP_PERCENTAGE:
+        definition: Percentage of the investment that owned by Mubadala. Expressed
+          as a decimal between 0 and 1.
+      TICKET_SIZE_USD:
+        definition: The approved target value of the initial input investment (in
+          millions) that Mubadala will make in the investment in USD. This is not
+          the return on the investment.
+      TICKET_SIZE_AED:
+        definition: The approved target value of the initial input investment (in
+          millions) that Mubadala will make in the investment in AED. This is not
+          the return on the investment.
+      UNREALIZED_VALUE_AED:
+        definition: The most recent fair market value of an investment in AED. Use
+          this to determine the valuation or exposure of the individual investment.
+      YTD_TOTAL_PROCEEDS:
+        definition: The total proceeds (fair market value minus cash invested) from
+          the investment, over the period from start of the calendar year to the in
+          year measurement date (usually month or quarter end) in AED.
+      ITD_TOTAL_PROCEEDS:
+        definition: The total proceeds (fair market value minus cash invested) from
+          the inception date for the investment in AED.
+      TARGET_RETURN:
+        definition: The desired target percentage Internal Rate of Return (IRR) on
+          this deal. This should be compared against the other IRR / Return metrics.
+          When users ask for 'IC Case IRR', they are referring to TARGET_RETURN.
+      ITD_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) from inception to
+          measurement date of the investment. This should be compared against the
+          other IRR / Return metrics.
+      REFORECAST_RETURN:
+        definition: The forecasted percentage Internal Rate of Return (IRR) at the
+          predicted exit point. This should be compared against the other IRR / Return
+          metrics.
+      YTD_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year to the in year measurement date (usually
+          month or quarter end). This should be compared against the other IRR / RETURN
+          metrics.
+      YTD_3_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 3 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      YTD_4_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 4 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      YTD_5_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 5 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      ITD_CASH_INVESTED:
+        definition: The total amount of cash invested in AED from inception to date.
+          Always represented as a negative value as it is an outflow. Always represented
+          as a negative value as it is an outflow.
+      YTD_CASH_INVESTED:
+        definition: The total amount of cash invested in AED over the period from
+          start of the calendar year to the in year measurement date (usually month
+          or quarter end) in AED. Always represented as a negative value as it is
+          an outflow.
+      YTD_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year to the in year measurement date (usually
+          month or quarter end) in AED
+      YTD_3_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 3 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      YTD_4_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 4 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      YTD_5_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 5 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      ITD_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow from the inception
+          date for the investment in AED.
+      NUMBER_OF_SHARES:
+        definition: Number of shares in a public investment
+      DAILY_SHARE_PRICE:
+        definition: Price per share of a public investment in AED
+      DVPI:
+        definition: The Distributed to Paid-In Capital (DVPI). This is the ratio of
+          distributions (cash or stock returned to investors) to the total capital
+          contributed by investors. It reflects the realized returns of an investment
+          fund. Expressed as a decimal, where positive values indicate distributions
+          exceeding paid-in capital, and negative values indicate distributions below
+          paid-in capital.
+      ACTUAL_MOIC:
+        definition: The Multiple on Investment Capital (MOIC or also known as TVPI).
+          This is the ratio of the total value (distributions + residual value) relative
+          to the total capital contributed by investors. Expressed as a decimal, where
+          positive values indicate total value exceeding paid-in capital, and negative
+          values indicate total value below paid-in capital. This should be compared
+          to other MOIC metrics.
+      TARGET_MOIC:
+        definition: The desired target Multiple on Investment Capital (MOIC or also
+          known as TVPI) on the deal. This is the ratio of the total value (distributions
+          + residual value) relative to the total capital contributed by investors.
+          Expressed as a decimal, where positive values indicate total value exceeding
+          paid-in capital, and negative values indicate total value below paid-in
+          capital. This should be compared to other MOIC metrics. When users ask for
+          'IC Case MOIC', they are referring to TARGET_MOIC.
+      REFORECAST_MOIC:
+        definition: The forecasted MOIC (also known as TVPI) at the predicted exit
+          point. This is the ratio of the total value (distributions + residual value)
+          relative to the total capital contributed by investors. Expressed as a decimal,
+          where positive values indicate total value exceeding paid-in capital, and
+          negative values indicate total value below paid-in capital. This should
+          be compared to other MOIC metrics.
+      LOSS_RATIO:
+        definition: The proportion of losses incurred relative to the total capital
+          invested, expressed as a decimal between 0 and -1. Always represented as
+          a negative value as it is an outflow.
+      INITIAL_INVESTEMENT_DATE:
+        definition: Date the initial investment was made by Mubadala. Formatted YYYY-MM-DD.
+      VINTAGE:
+        definition: Year the initial investment was made by Mubadala. Formatted YYYY-MM-DD.
+  MIC_KPI_VW:
+    view_name: MIC KPI View
+    description: This view contains TIMESTAMPED key performance indicators for investments
+      aggregated across Mubadala  WITHOUT mentioning specific platforms, business
+      units, geographical dimensions
+    selector: Use this view when the question is referring to aggregated metrics across
+      multiple investments for all of Mubadala's investments. There is no data on
+      individual investments / deals in this view.
+    columns:
+      AS_OF_DATE:
+        definition: Date when the KPI metrics were calculated
+      TOTAL_COMMITTED_CAPITAL:
+        definition: Total capital committed across all investments
+      TOTAL_INVESTED_CAPITAL:
+        definition: Total capital actually invested
+      TOTAL_REALISED_VALUE:
+        definition: Total realized value from investments
+      AGGREGATE_IRR:
+        definition: Aggregate Internal Rate of Return across all investments
+      AGGREGATE_MOIC:
+        definition: Aggregate Multiple on Invested Capital
+      AS_ON_DATE_ID:
+        definition: Date the calculation was made expressed in the form YYYYMMDD.
+          Always take the latest entry by date, unless asked to compare dates, the
+          question targets a different time range or multi-years worth of data is
+          needed for a calculation.
+      YEAR:
+        definition: Year the calculation was made expressed in the form YYYY.
+      RECORD_TYPE:
+        definition: Record type indicating the period for calculation - includes quarterly
+          data (Q1, Q2, Q3, Q4) and year-to-date (YTD) information. This field helps
+          identify whether the metrics are for a specific quarter or cumulative year-to-date
+          performance.
+      LEVEL_NAME:
+        definition: Portfolio identifier, either represents 'MIC' (Mubadala Investment
+          Company) or 'ADIC' (Abu Dhabi Investment Council)
+      PORTFOLIO:
+        definition: Portfolio identifier, either represents 'MIC' (Mubadala Investment
+          Company) or 'ADIC' (Abu Dhabi Investment Council)
+      ITD_RETURN:
+        definition: The percentage internal rate of return from inception to measurement
+          date of the investment. For comparisons, this should be compared to other
+          IRR / RETURN metrics.
+      REFORECAST_RETURN:
+        definition: The forecasted percentage Internal Rate of Return (IRR) at the
+          predicted exit point. This should be compared against the other IRR / RETURN
+          metrics.
+      YTD_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year to the in year measurement date (usually
+          month or quarter end). This should be compared against the other IRR / RETURN
+          metrics.
+      YTD_3_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 3 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      YTD_4_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 4 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      YTD_5_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 5 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      YTD_BENCHMARK:
+        definition: The internal benchmark against the market for the internal rate
+          of return (IRR) over the period from start of the calendar year to the in
+          year measurement date (usually month or quarter end).
+      YTD_3_BENCHMARK:
+        definition: The internal benchmark against the market for the internal rate
+          of return (IRR) over the period from start of the calendar year, 3 years
+          ago, to the in year measurement date (usually month or quarter end).
+      YTD_4_BENCHMARK:
+        definition: The internal benchmark against the market for the internal rate
+          of return (IRR) over the period from start of the calendar year, 4 years
+          ago, to the in year measurement date (usually month or quarter end).
+      YTD_5_BENCHMARK:
+        definition: The internal benchmark against the market for the internal rate
+          of return (IRR) over the period from start of the calendar year, 5 years
+          ago, to the in year measurement date (usually month or quarter end).
+      UNREALIZED_VALUE:
+        definition: The fair market value or exposure of an investment at a point
+          in time AED
+      YTD_TOTAL_PROCEEDS:
+        definition: The total proceeds (fair market value minus cash invested) from
+          the investment, over the period from start of the calendar year to the in
+          year measurement date (usually month or quarter end) in AED.
+      ITD_CASH_INVESTED:
+        definition: The total amount of cash invested in AED from inception to date.
+          Always represented as a negative value as it is an outflow.
+      YTD_CASH_INVESTED:
+        definition: The total amount of cash invested in AED over the period from
+          start of the calendar year to the in year measurement date (usually month
+          or quarter end) in AED. Always represented as a negative value as it is
+          an outflow.
+      ITD_TOTAL_PROCEEDS:
+        definition: The total proceeds (fair market value minus cash invested) from
+          the inception date for the investment in AED.
+      YTD_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year to the in year measurement date (usually
+          month or quarter end) in AED
+      YTD_3_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 3 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      YTD_4_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 4 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      YTD_5_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 5 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      ITD_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow from the inception
+          date for the investment in AED.
+      DVPI:
+        definition: The Distributed to Paid-In Capital (DVPI). This is the ratio of
+          distributions (cash or stock returned to investors) to the total capital
+          contributed by investors. It reflects the realized returns of an investment
+          fund. Expressed as a decimal, where positive values indicate distributions
+          exceeding paid-in capital, and negative values indicate distributions below
+          paid-in capital.
+      RVPI:
+        definition: The Residual Value to Paid-In Capital (RVPI). This is the ratio
+          of the remaining value of an investment fund (unrealized gains) to the total
+          capital contributed by investors. It reflects the unrealized returns of
+          the fund. Expressed as a decimal, where positive values indicate residual
+          value exceeding paid-in capital, and negative values indicate residual value
+          below paid-in capital.
+      ACTUAL_MOIC:
+        definition: The Multiple on Investment Capital (MOIC or also known as TVPI).
+          This is the ratio of the total value (distributions + residual value) relative
+          to the total capital contributed by investors. Expressed as a decimal, where
+          positive values indicate total value exceeding paid-in capital, and negative
+          values indicate total value below paid-in capital. This should be compared
+          to other MOIC metrics.
+      REFORECAST_MOIC:
+        definition: The forecasted MOIC (also known as TVPI) at the predicted exit
+          point. This is the ratio of the total value (distributions + residual value)
+          relative to the total capital contributed by investors. Expressed as a decimal,
+          where positive values indicate total value exceeding paid-in capital, and
+          negative values indicate total value below paid-in capital. This should
+          be compared to other MOIC metrics.
+      LOSS_RATIO:
+        definition: The proportion of losses incurred relative to the total capital
+          invested, expressed as a decimal between 0 and -1. Always represented as
+          a negative value as it is an outflow.
+  PLATFORM_KPI_VW:
+    view_name: Platform KPI View
+    description: This view contains TIMESTAMPED key performance indicators for investments
+      aggregated at platform level only.
+    selector: Use this view when the question is referring to aggregated metrics across
+      multiple investments for an individual platform only. There is no data on individual
+      investments / deals in this view.DO NOT use if the question mentions sectors,
+      business units, geographical dimensions, or requires breakdowns by these dimensions.
+    columns:
+      PLATFORM:
+        definition: Mubadala’s Business Platform, Corporate Platform or Group CEO
+          & Managing Director Platform
+        include_allowed_values: true
+      AS_OF_DATE:
+        definition: Date when the KPI metrics were calculated
+      COMMITTED_CAPITAL:
+        definition: Capital committed by this platform
+      INVESTED_CAPITAL:
+        definition: Capital actually invested by this platform
+      REALISED_VALUE:
+        definition: Realized value from platform investments
+      PLATFORM_IRR:
+        definition: Platform-level Internal Rate of Return
+      PLATFORM_MOIC:
+        definition: Platform-level Multiple on Invested Capital
+      AS_ON_DATE_ID:
+        definition: Date the calculation was made expressed in the form YYYYMMDD.
+          Always take the latest entry by date, unless asked to compare dates, the
+          question targets a different time range or multi-years worth of data is
+          needed for a calculation.
+      YEAR:
+        definition: Year the calculation was made expressed in the form YYYY.
+      RECORD_TYPE:
+        definition: Record type indicating the period for calculation - includes quarterly
+          data (Q1, Q2, Q3, Q4) and year-to-date (YTD) information. This field helps
+          identify whether the metrics are for a specific quarter or cumulative year-to-date
+          performance.
+      ITD_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) from inception to
+          measurement date of the investment. This should be compared against the
+          other IRR / Return metrics.
+      REFORECAST_RETURN:
+        definition: The forecasted percentage Internal Rate of Return (IRR) at the
+          predicted exit point. This should be compared against the other IRR / Return
+          metrics.
+      YTD_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year to the in year measurement date (usually
+          month or quarter end). This should be compared against the other IRR / RETURN
+          metrics.
+      YTD_3_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 3 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      YTD_4_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 4 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      YTD_5_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 5 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      YTD_BENCHMARK:
+        definition: The internal benchmark against the market for the internal rate
+          of return (IRR) over the period from start of the calendar year to the in
+          year measurement date (usually month or quarter end).
+      YTD_3_BENCHMARK:
+        definition: The internal benchmark against the market for the internal rate
+          of return (IRR) over the period from start of the calendar year, 3 years
+          ago, to the in year measurement date (usually month or quarter end).
+      YTD_4_BENCHMARK:
+        definition: The internal benchmark against the market for the internal rate
+          of return (IRR) over the period from start of the calendar year, 4 years
+          ago, to the in year measurement date (usually month or quarter end).
+      YTD_5_BENCHMARK:
+        definition: The internal benchmark against the market for the internal rate
+          of return (IRR) over the period from start of the calendar year, 5 years
+          ago, to the in year measurement date (usually month or quarter end).
+      UNREALIZED_VALUE:
+        definition: The fair market value or exposure of an investment at a point
+          in time AED
+      YTD_TOTAL_PROCEEDS:
+        definition: The total proceeds (fair market value minus cash invested) from
+          the investment, over the period from start of the calendar year to the in
+          year measurement date (usually month or quarter end) in AED.
+      ITD_CASH_INVESTED:
+        definition: The total amount of cash invested in AED from inception to date.
+          Always represented as a negative value as it is an outflow.
+      YTD_CASH_INVESTED:
+        definition: The total amount of cash invested in AED over the period from
+          start of the calendar year to the in year measurement date (usually month
+          or quarter end) in AED. Always represented as a negative value as it is
+          an outflow.
+      ITD_TOTAL_PROCEEDS:
+        definition: The total proceeds (fair market value minus cash invested) from
+          the inception date for the investment in AED.
+      YTD_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year to the in year measurement date (usually
+          month or quarter end) in AED
+      YTD_3_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 3 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      YTD_4_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 4 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      YTD_5_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 5 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      ITD_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow from the inception
+          date for the investment in AED.
+      DVPI:
+        definition: The Distributed to Paid-In Capital (DVPI). This is the ratio of
+          distributions (cash or stock returned to investors) to the total capital
+          contributed by investors. It reflects the realized returns of an investment
+          fund. Expressed as a decimal, where positive values indicate distributions
+          exceeding paid-in capital, and negative values indicate distributions below
+          paid-in capital.
+      RVPI:
+        definition: The Residual Value to Paid-In Capital (RVPI). This is the ratio
+          of the remaining value of an investment fund (unrealized gains) to the total
+          capital contributed by investors. It reflects the unrealized returns of
+          the fund. Expressed as a decimal, where positive values indicate residual
+          value exceeding paid-in capital, and negative values indicate residual value
+          below paid-in capital.
+      ACTUAL_MOIC:
+        definition: The Multiple on Investment Capital (MOIC or also known as TVPI).
+          This is the ratio of the total value (distributions + residual value) relative
+          to the total capital contributed by investors. Expressed as a decimal, where
+          positive values indicate total value exceeding paid-in capital, and negative
+          values indicate total value below paid-in capital. This should be compared
+          to other MOIC metrics.
+      REFORECAST_MOIC:
+        definition: The forecasted MOIC (also known as TVPI) at the predicted exit
+          point. This is the ratio of the total value (distributions + residual value)
+          relative to the total capital contributed by investors. Expressed as a decimal,
+          where positive values indicate total value exceeding paid-in capital, and
+          negative values indicate total value below paid-in capital. This should
+          be compared to other MOIC metrics.
+      LOSS_RATIO:
+        definition: The proportion of losses incurred relative to the total capital
+          invested, expressed as a decimal between 0 and -1. Always represented as
+          a negative value as it is an outflow.
+  BUSINESS_UNIT_KPI_VW:
+    view_name: Business Unit KPI View
+    description: This view contains TIMESTAMPED key performance indicators for investments
+      aggregated for each business unit.
+    selector: Use this view when the question is referring to aggregated metrics across
+      multiple investments for an individual business unit level only. There is no
+      data on individual investments / deals in this view.DO NOT use if the question
+      mentions platforms, sectors, geographical dimensions, or requires breakdowns
+      by these dimensions.
+    columns:
+      BUSINESS_UNIT:
+        definition: Any subdivision of a Business Platform, which is headed by an
+          Executive Director or any individual designated by the relevant Business
+          Platform CEO to carry out the authorities of such function within their
+          Units.
+        include_allowed_values: true
+      PLATFORM:
+        definition: Parent platform of the business unit
+        include_allowed_values: true
+      AS_OF_DATE:
+        definition: Date when the KPI metrics were calculated
+      COMMITTED_CAPITAL:
+        definition: Capital committed by this business unit
+      INVESTED_CAPITAL:
+        definition: Capital actually invested by this business unit
+      REALISED_VALUE:
+        definition: Realized value from business unit investments
+      UNIT_IRR:
+        definition: Business unit Internal Rate of Return
+      UNIT_MOIC:
+        definition: Business unit Multiple on Invested Capital
+      COMMON_DESC:
+        definition: ''
+      AS_ON_DATE_ID:
+        definition: Date the calculation was made expressed in the form YYYYMMDD.
+          Always take the latest entry by date, unless asked to compare dates, the
+          question targets a different time range or multi-years worth of data is
+          needed for a calculation.
+      YEAR:
+        definition: Year the calculation was made expressed in the form YYYY.
+      RECORD_TYPE:
+        definition: Record type indicating the period for calculation - includes quarterly
+          data (Q1, Q2, Q3, Q4) and year-to-date (YTD) information. This field helps
+          identify whether the metrics are for a specific quarter or cumulative year-to-date
+          performance.
+      ITD_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) from inception to
+          measurement date of the investment. This should be compared against the
+          other IRR / Return metrics.
+      REFORECAST_RETURN:
+        definition: The forecasted percentage Internal Rate of Return (IRR) at the
+          predicted exit point. This should be compared against the other IRR / Return
+          metrics.
+      YTD_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year to the in year measurement date (usually
+          month or quarter end). This should be compared against the other IRR / RETURN
+          metrics.
+      YTD_3_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 3 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      YTD_4_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 4 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      YTD_5_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 5 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      YTD_BENCHMARK:
+        definition: The internal benchmark against the market for the internal rate
+          of return (IRR) over the period from start of the calendar year to the in
+          year measurement date (usually month or quarter end).
+      YTD_3_BENCHMARK:
+        definition: The internal benchmark against the market for the internal rate
+          of return (IRR) over the period from start of the calendar year, 3 years
+          ago, to the in year measurement date (usually month or quarter end).
+      YTD_4_BENCHMARK:
+        definition: The internal benchmark against the market for the internal rate
+          of return (IRR) over the period from start of the calendar year, 4 years
+          ago, to the in year measurement date (usually month or quarter end).
+      YTD_5_BENCHMARK:
+        definition: The internal benchmark against the market for the internal rate
+          of return (IRR) over the period from start of the calendar year, 5 years
+          ago, to the in year measurement date (usually month or quarter end).
+      UNREALIZED_VALUE:
+        definition: The fair market value or exposure of an investment at a point
+          in time AED
+      YTD_TOTAL_PROCEEDS:
+        definition: The total proceeds (fair market value minus cash invested) from
+          the investment, over the period from start of the calendar year to the in
+          year measurement date (usually month or quarter end) in AED.
+      ITD_CASH_INVESTED:
+        definition: The total amount of cash invested in AED from inception to date.
+          Always represented as a negative value as it is an outflow.
+      YTD_CASH_INVESTED:
+        definition: The total amount of cash invested in AED over the period from
+          start of the calendar year to the in year measurement date (usually month
+          or quarter end) in AED. Always represented as a negative value as it is
+          an outflow.
+      ITD_TOTAL_PROCEEDS:
+        definition: The total proceeds (fair market value minus cash invested) from
+          the inception date for the investment in AED.
+      YTD_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year to the in year measurement date (usually
+          month or quarter end) in AED
+      YTD_3_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 3 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      YTD_4_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 4 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      YTD_5_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 5 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      ITD_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow from the inception
+          date for the investment in AED.
+      DVPI:
+        definition: The Distributed to Paid-In Capital (DVPI). This is the ratio of
+          distributions (cash or stock returned to investors) to the total capital
+          contributed by investors. It reflects the realized returns of an investment
+          fund. Expressed as a decimal, where positive values indicate distributions
+          exceeding paid-in capital, and negative values indicate distributions below
+          paid-in capital.
+      RVPI:
+        definition: The Residual Value to Paid-In Capital (RVPI). This is the ratio
+          of the remaining value of an investment fund (unrealized gains) to the total
+          capital contributed by investors. It reflects the unrealized returns of
+          the fund. Expressed as a decimal, where positive values indicate residual
+          value exceeding paid-in capital, and negative values indicate residual value
+          below paid-in capital.
+      ACTUAL_MOIC:
+        definition: The Multiple on Investment Capital (MOIC or also known as TVPI).
+          This is the ratio of the total value (distributions + residual value) relative
+          to the total capital contributed by investors. Expressed as a decimal, where
+          positive values indicate total value exceeding paid-in capital, and negative
+          values indicate total value below paid-in capital. This should be compared
+          to other MOIC metrics.
+      REFORECAST_MOIC:
+        definition: The forecasted MOIC (also known as TVPI) at the predicted exit
+          point. This is the ratio of the total value (distributions + residual value)
+          relative to the total capital contributed by investors. Expressed as a decimal,
+          where positive values indicate total value exceeding paid-in capital, and
+          negative values indicate total value below paid-in capital. This should
+          be compared to other MOIC metrics.
+      LOSS_RATIO:
+        definition: The proportion of losses incurred relative to the total capital
+          invested, expressed as a decimal between 0 and -1. Always represented as
+          a negative value as it is an outflow.
+  BUSINESS_UNIT_BY_SECTOR_VW:
+    view_name: Business Unit Sector View
+    description: This view contains TIMESTAMPED key performance indicators for investments
+      aggregated at BOTH sector and business unit level.
+    selector: Use this view when the question references aggregated metrics at  BOTH
+      sector and business unit level. There is no data on individual investments /
+      deals in this view.DO NOT use if the question mentions platforms, geographical
+      dimensions, or requires breakdowns by these dimensions.
+    columns:
+      AS_ON_DATE_ID:
+        definition: Date the calculation was made expressed in the form YYYYMMDD.
+          Always take the latest entry by date, unless asked to compare dates, the
+          question targets a different time range or multi-years worth of data is
+          needed for a calculation.
+      YEAR:
+        definition: Year the calculation was made expressed in the form YYYY.
+      RECORD_TYPE:
+        definition: Record type indicating the period for calculation - includes quarterly
+          data (Q1, Q2, Q3, Q4) and year-to-date (YTD) information. This field helps
+          identify whether the metrics are for a specific quarter or cumulative year-to-date
+          performance.
+      BUSINESS_UNIT:
+        definition: 'Any subdivision of a Business Platform, which is headed by an
+          Executive Director or any individual designated by the relevant Business
+          Platform CEO to carry out the authorities of such function within their
+          Units. '
+        include_allowed_values: true
+      GICS_SECTOR:
+        definition: Level 1 Global Industry Classification Standard
+        include_allowed_values: true
+      ITD_RETURN:
+        definition: The annualized percentage rate of return from inception to measurement
+          date of the investment
+      YTD_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year to the in year measurement date (usually
+          month or quarter end). This should be compared against the other IRR / RETURN
+          metrics.
+      YTD_3_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 3 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      YTD_4_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 4 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      YTD_5_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 5 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      UNREALIZED_VALUE:
+        definition: The fair market value or exposure of an investment at a point
+          in time AED
+      YTD_TOTAL_PROCEEDS:
+        definition: The total proceeds (fair market value minus cash invested) from
+          the investment, over the period from start of the calendar year to the in
+          year measurement date (usually month or quarter end) in AED.
+      ITD_CASH_INVESTED:
+        definition: The total amount of cash invested in AED from inception to date.
+          Always represented as a negative value as it is an outflow.
+      YTD_CASH_INVESTED:
+        definition: The total amount of cash invested in AED over the period from
+          start of the calendar year to the in year measurement date (usually month
+          or quarter end) in AED. Always represented as a negative value as it is
+          an outflow.
+      ITD_TOTAL_PROCEEDS:
+        definition: The total proceeds (fair market value minus cash invested) from
+          the inception date for the investment in AED.
+      YTD_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year to the in year measurement date (usually
+          month or quarter end) in AED
+      YTD_3_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 3 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      YTD_4_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 4 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      YTD_5_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 5 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      ITD_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow from the inception
+          date for the investment in AED.
+  MIC_BY_INVESTMENT_CLASS_VW:
+    view_name: MIC Investment Class View
+    description: This view contains TIMESTAMPED key performance indicators for investments
+      aggregated at a investment class level only
+    selector: Use this view when the question references aggregated metrics at the
+      investment class level for all of Mubadala's investments. There is no data on
+      individual investments / deals in this view.DO NOT use if the question mentions
+      platforms, sectors , investment or asset class, business units, geographical
+      dimensions, or requires breakdowns by these dimensions.
+    columns:
+      AS_ON_DATE_ID:
+        definition: Date the calculation was made expressed in the form YYYYMMDD.
+          Always take the latest entry by date, unless asked to compare dates, the
+          question targets a different time range or multi-years worth of data is
+          needed for a calculation.
+      YEAR:
+        definition: Year the calculation was made expressed in the form YYYY.
+      RECORD_TYPE:
+        definition: Record type indicating the period for calculation - includes quarterly
+          data (Q1, Q2, Q3, Q4) and year-to-date (YTD) information. This field helps
+          identify whether the metrics are for a specific quarter or cumulative year-to-date
+          performance.
+      PORTFOLIO:
+        definition: Portfolio identifier, either represents 'MIC' (Mubadala Investment
+          Company) or 'ADIC' (Abu Dhabi Investment Council)
+      INVESTMENT_CLASS:
+        definition: A class of an investment.
+        include_allowed_values: true
+      ITD_RETURN:
+        definition: The annualized percentage rate of return from inception to measurement
+          date of the investment
+      YTD_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year to the in year measurement date (usually
+          month or quarter end). This should be compared against the other IRR / RETURN
+          metrics.
+      YTD_3_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 3 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      YTD_4_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 4 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      YTD_5_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 5 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      UNREALIZED_VALUE:
+        definition: The fair market value or exposure of an investment at a point
+          in time AED
+      YTD_TOTAL_PROCEEDS:
+        definition: The total proceeds (fair market value minus cash invested) from
+          the investment, over the period from start of the calendar year to the in
+          year measurement date (usually month or quarter end) in AED.
+      ITD_CASH_INVESTED:
+        definition: The total amount of cash invested in AED from inception to date.
+          Always represented as a negative value as it is an outflow.
+      YTD_CASH_INVESTED:
+        definition: The total amount of cash invested in AED over the period from
+          start of the calendar year to the in year measurement date (usually month
+          or quarter end) in AED. Always represented as a negative value as it is
+          an outflow.
+      ITD_TOTAL_PROCEEDS:
+        definition: The total proceeds (fair market value minus cash invested) from
+          the inception date for the investment in AED.
+      YTD_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year to the in year measurement date (usually
+          month or quarter end) in AED
+      YTD_3_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 3 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      YTD_4_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 4 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      YTD_5_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 5 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      ITD_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow from the inception
+          date for the investment in AED.
+  PLATFORM_BY_INVESTMENT_CLASS_VW:
+    view_name: Platform Investment Class View
+    description: This view contains TIMESTAMPED key performance indicators for investments
+      aggregated at BOTH investment class and platform level.
+    selector: Use this view when the question references aggregated metrics at BOTH
+      investment class and platform level. There is no data on individual investments
+      / deals in this view.DO NOT use if the question mentions sectors, business units,
+      geographical dimensions, or requires breakdowns by these dimensions.
+    columns:
+      AS_ON_DATE_ID:
+        definition: Date the calculation was made expressed in the form YYYYMMDD.
+          Always take the latest entry by date, unless asked to compare dates, the
+          question targets a different time range or multi-years worth of data is
+          needed for a calculation.
+      YEAR:
+        definition: Year the calculation was made expressed in the form YYYY.
+      RECORD_TYPE:
+        definition: Record type indicating the period for calculation - includes quarterly
+          data (Q1, Q2, Q3, Q4) and year-to-date (YTD) information. This field helps
+          identify whether the metrics are for a specific quarter or cumulative year-to-date
+          performance.
+      PLATFORM:
+        definition: Mubadala’s Business Platform, Corporate Platform or Group CEO
+          & Managing Director Platform
+        include_allowed_values: true
+      INVESTMENT_CLASS:
+        definition: A class of an investment.
+        include_allowed_values: true
+      ITD_RETURN:
+        definition: The annualized percentage rate of return from inception to measurement
+          date of the investment
+      YTD_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year to the in year measurement date (usually
+          month or quarter end). This should be compared against the other IRR / RETURN
+          metrics.
+      YTD_3_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 3 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      YTD_4_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 4 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      YTD_5_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 5 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      UNREALIZED_VALUE:
+        definition: The fair market value or exposure of an investment at a point
+          in time AED
+      YTD_TOTAL_PROCEEDS:
+        definition: The total proceeds (fair market value minus cash invested) from
+          the investment, over the period from start of the calendar year to the in
+          year measurement date (usually month or quarter end) in AED.
+      ITD_CASH_INVESTED:
+        definition: The total amount of cash invested in AED from inception to date.
+          Always represented as a negative value as it is an outflow.
+      YTD_CASH_INVESTED:
+        definition: The total amount of cash invested in AED over the period from
+          start of the calendar year to the in year measurement date (usually month
+          or quarter end) in AED. Always represented as a negative value as it is
+          an outflow.
+      ITD_TOTAL_PROCEEDS:
+        definition: The total proceeds (fair market value minus cash invested) from
+          the inception date for the investment in AED.
+      YTD_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year to the in year measurement date (usually
+          month or quarter end) in AED
+      YTD_3_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 3 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      YTD_4_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 4 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      YTD_5_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 5 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      ITD_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow from the inception
+          date for the investment in AED.
+  BUSINESS_UNIT_BY_INVESTMENT_CLASS_VW:
+    view_name: Business Unit Investment Class View
+    description: This view contains TIMESTAMPED key performance indicators for investments
+      aggregated at BOTH investment class and business unit level.
+    selector: Use this view when the question references aggregated metrics at BOTH
+      investment class and business unit level. There is no data on individual investments
+      / deals in this view.DO NOT use if the question mentions platforms,sectors ,
+      asset class ,geographical dimensions, or requires breakdowns by these dimensions.
+    columns:
+      AS_ON_DATE_ID:
+        definition: Date the calculation was made expressed in the form YYYYMMDD.
+          Always take the latest entry by date, unless asked to compare dates, the
+          question targets a different time range or multi-years worth of data is
+          needed for a calculation.
+      YEAR:
+        definition: Year the calculation was made expressed in the form YYYY.
+      RECORD_TYPE:
+        definition: Record type indicating the period for calculation - includes quarterly
+          data (Q1, Q2, Q3, Q4) and year-to-date (YTD) information. This field helps
+          identify whether the metrics are for a specific quarter or cumulative year-to-date
+          performance.
+      BUSINESS_UNIT:
+        definition: 'Any subdivision of a Business Platform, which is headed by an
+          Executive Director or any individual designated by the relevant Business
+          Platform CEO to carry out the authorities of such function within their
+          Units. '
+        include_allowed_values: true
+      INVESTMENT_CLASS:
+        definition: A class of an investment.
+        include_allowed_values: true
+      ITD_RETURN:
+        definition: The annualized percentage rate of return from inception to measurement
+          date of the investment
+      YTD_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year to the in year measurement date (usually
+          month or quarter end). This should be compared against the other IRR / RETURN
+          metrics.
+      YTD_3_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 3 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      YTD_4_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 4 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      YTD_5_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 5 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      UNREALIZED_VALUE:
+        definition: The fair market value or exposure of an investment at a point
+          in time AED
+      YTD_TOTAL_PROCEEDS:
+        definition: The total proceeds (fair market value minus cash invested) from
+          the investment, over the period from start of the calendar year to the in
+          year measurement date (usually month or quarter end) in AED.
+      ITD_CASH_INVESTED:
+        definition: The total amount of cash invested in AED from inception to date.
+          Always represented as a negative value as it is an outflow.
+      YTD_CASH_INVESTED:
+        definition: The total amount of cash invested in AED over the period from
+          start of the calendar year to the in year measurement date (usually month
+          or quarter end) in AED. Always represented as a negative value as it is
+          an outflow.
+      ITD_TOTAL_PROCEEDS:
+        definition: The total proceeds (fair market value minus cash invested) from
+          the inception date for the investment in AED.
+      YTD_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year to the in year measurement date (usually
+          month or quarter end) in AED
+      YTD_3_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 3 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      YTD_4_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 4 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      YTD_5_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 5 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      ITD_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow from the inception
+          date for the investment in AED.
+  MIC_BY_SECTOR_VW:
+    view_name: MIC Sector View
+    description: This view contains TIMESTAMPED key performance indicators for investments
+      aggregated at a sector level only.
+    selector: Use this view when the question references aggregated metrics at the
+      sector level only for all of Mubadala's investments. There is no data on individual
+      investments / deals in this view.DO NOT use if the question mentions platforms,
+      business units, geographical dimensions, or requires breakdowns by these dimensions.
+    columns:
+      AS_ON_DATE_ID:
+        definition: Date the calculation was made expressed in the form YYYYMMDD.
+          Always take the latest entry by date, unless asked to compare dates, the
+          question targets a different time range or multi-years worth of data is
+          needed for a calculation.
+      YEAR:
+        definition: Year the calculation was made expressed in the form YYYY.
+      RECORD_TYPE:
+        definition: Record type indicating the period for calculation - includes quarterly
+          data (Q1, Q2, Q3, Q4) and year-to-date (YTD) information. This field helps
+          identify whether the metrics are for a specific quarter or cumulative year-to-date
+          performance.
+      LEVEL_NAME:
+        definition: The level of the sector classification
+      GICS_SECTOR:
+        definition: Level 1 Global Industry Classification Standard
+        include_allowed_values: true
+      ITD_RETURN:
+        definition: The annualized percentage rate of return from inception to measurement
+          date of the investment
+      YTD_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year to the in year measurement date (usually
+          month or quarter end). This should be compared against the other IRR / RETURN
+          metrics.
+      YTD_3_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 3 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      YTD_4_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 4 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      YTD_5_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 5 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      UNREALIZED_VALUE:
+        definition: The fair market value or exposure of an investment at a point
+          in time AED
+      YTD_TOTAL_PROCEEDS:
+        definition: The total proceeds (fair market value minus cash invested) from
+          the investment, over the period from start of the calendar year to the in
+          year measurement date (usually month or quarter end) in AED.
+      ITD_CASH_INVESTED:
+        definition: The total amount of cash invested in AED from inception to date.
+          Always represented as a negative value as it is an outflow.
+      YTD_CASH_INVESTED:
+        definition: The total amount of cash invested in AED over the period from
+          start of the calendar year to the in year measurement date (usually month
+          or quarter end) in AED. Always represented as a negative value as it is
+          an outflow.
+      ITD_TOTAL_PROCEEDS:
+        definition: The total proceeds (fair market value minus cash invested) from
+          the inception date for the investment in AED.
+      YTD_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year to the in year measurement date (usually
+          month or quarter end) in AED
+      YTD_3_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 3 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      YTD_4_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 4 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      YTD_5_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 5 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      ITD_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow from the inception
+          date for the investment in AED.
+  PLATFORM_BY_SECTOR_VW:
+    view_name: Platform Sector View
+    description: This view contains TIMESTAMPED key performance indicators for investments
+      aggregated at BOTH sector and platform level.
+    selector: Use this view when the question references aggregated metrics at BOTH
+      sector and platform level. There is no data on individual investments / deals
+      in this view.DO NOT use if the question mentions investment or asset class,
+      business units, geographical dimensions, or requires breakdowns by these dimensions.
+    columns:
+      AS_ON_DATE_ID:
+        definition: Date the calculation was made expressed in the form YYYYMMDD.
+          Always take the latest entry by date, unless asked to compare dates, the
+          question targets a different time range or multi-years worth of data is
+          needed for a calculation.
+      YEAR:
+        definition: Year the calculation was made expressed in the form YYYY.
+      RECORD_TYPE:
+        definition: Record type indicating the period for calculation - includes quarterly
+          data (Q1, Q2, Q3, Q4) and year-to-date (YTD) information. This field helps
+          identify whether the metrics are for a specific quarter or cumulative year-to-date
+          performance.
+      PLATFORM:
+        definition: Mubadala’s Business Platform, Corporate Platform or Group CEO
+          & Managing Director Platform
+        include_allowed_values: true
+      LEVEL_NAME:
+        definition: The level of the sector classification
+      GICS_SECTOR:
+        definition: Level 1 Global Industry Classification Standard
+        include_allowed_values: true
+      ITD_RETURN:
+        definition: The annualized percentage rate of return from inception to measurement
+          date of the investment
+      YTD_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year to the in year measurement date (usually
+          month or quarter end). This should be compared against the other IRR / RETURN
+          metrics.
+      YTD_3_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 3 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      YTD_4_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 4 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      YTD_5_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 5 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      UNREALIZED_VALUE:
+        definition: The fair market value or exposure of an investment at a point
+          in time AED
+      YTD_TOTAL_PROCEEDS:
+        definition: The total proceeds (fair market value minus cash invested) from
+          the investment, over the period from start of the calendar year to the in
+          year measurement date (usually month or quarter end) in AED.
+      ITD_CASH_INVESTED:
+        definition: The total amount of cash invested in AED from inception to date.
+          Always represented as a negative value as it is an outflow.
+      YTD_CASH_INVESTED:
+        definition: The total amount of cash invested in AED over the period from
+          start of the calendar year to the in year measurement date (usually month
+          or quarter end) in AED. Always represented as a negative value as it is
+          an outflow.
+      ITD_TOTAL_PROCEEDS:
+        definition: The total proceeds (fair market value minus cash invested) from
+          the inception date for the investment in AED.
+      YTD_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year to the in year measurement date (usually
+          month or quarter end) in AED
+      YTD_3_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 3 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      YTD_4_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 4 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      YTD_5_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 5 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      ITD_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow from the inception
+          date for the investment in AED.
+  MIC_BY_ASSET_CLASS_VW:
+    view_name: MIC Asset Class View
+    description: This view contains TIMESTAMPED key performance indicators for investments
+      aggregated at a asset class level only.
+    selector: Use this view when the question references aggregated metrics at the
+      asset class level only for all of Mubadala's investments. There is no data on
+      individual investments / deals in this view.DO NOT use if the question mentions
+      platforms,sectors, business units, geographical dimensions, or requires breakdowns
+      by these dimensions.
+    columns:
+      AS_ON_DATE_ID:
+        definition: Date the calculation was made expressed in the form YYYYMMDD.
+          Always take the latest entry by date, unless asked to compare dates, the
+          question targets a different time range or multi-years worth of data is
+          needed for a calculation.
+      YEAR:
+        definition: Year the calculation was made expressed in the form YYYY.
+      RECORD_TYPE:
+        definition: Record type indicating the period for calculation - includes quarterly
+          data (Q1, Q2, Q3, Q4) and year-to-date (YTD) information. This field helps
+          identify whether the metrics are for a specific quarter or cumulative year-to-date
+          performance.
+      ASSET_CLASS_NAME:
+        definition: A grouping of investments that exhibit similar characteristics
+          and are subject to the same laws and regulations.
+      PORTFOLIO:
+        definition: Portfolio identifier, either represents 'MIC' (Mubadala Investment
+          Company) or 'ADIC' (Abu Dhabi Investment Council)
+      ITD_RETURN:
+        definition: The annualized percentage rate of return from inception to measurement
+          date of the investment
+      YTD_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year to the in year measurement date (usually
+          month or quarter end). This should be compared against the other IRR / RETURN
+          metrics.
+      YTD_3_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 3 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      YTD_4_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 4 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      YTD_5_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 5 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      UNREALIZED_VALUE:
+        definition: The fair market value or exposure of an investment at a point
+          in time AED
+      YTD_TOTAL_PROCEEDS:
+        definition: The total proceeds (fair market value minus cash invested) from
+          the investment, over the period from start of the calendar year to the in
+          year measurement date (usually month or quarter end) in AED.
+      ITD_CASH_INVESTED:
+        definition: The total amount of cash invested in AED from inception to date.
+          Always represented as a negative value as it is an outflow.
+      YTD_CASH_INVESTED:
+        definition: The total amount of cash invested in AED over the period from
+          start of the calendar year to the in year measurement date (usually month
+          or quarter end) in AED. Always represented as a negative value as it is
+          an outflow.
+      ITD_TOTAL_PROCEEDS:
+        definition: The total proceeds (fair market value minus cash invested) from
+          the inception date for the investment in AED.
+      YTD_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year to the in year measurement date (usually
+          month or quarter end) in AED
+      YTD_3_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 3 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      YTD_4_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 4 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      YTD_5_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 5 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      ITD_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow from the inception
+          date for the investment in AED.
+  BUSINESS_UNIT_BY_ASSET_CLASS_VW:
+    view_name: Business Unit Asset Class View
+    description: This view contains TIMESTAMPED key performance indicators for investments
+      aggregated at BOTH asset class and business unit level.
+    selector: Use this view when the question references aggregated metrics at BOTH
+      asset class and business unit level. There is no data on individual investments
+      / deals in this view.DO NOT use if the question mentions platforms,sectors,investment
+      class, geographical dimensions, or requires breakdowns by these dimensions.
+    columns:
+      AS_ON_DATE_ID:
+        definition: Date the calculation was made expressed in the form YYYYMMDD.
+          Always take the latest entry by date, unless asked to compare dates, the
+          question targets a different time range or multi-years worth of data is
+          needed for a calculation.
+      YEAR:
+        definition: Year the calculation was made expressed in the form YYYY.
+      RECORD_TYPE:
+        definition: Record type indicating the period for calculation - includes quarterly
+          data (Q1, Q2, Q3, Q4) and year-to-date (YTD) information. This field helps
+          identify whether the metrics are for a specific quarter or cumulative year-to-date
+          performance.
+      ASSET_CLASS_NAME:
+        definition: A grouping of investments that exhibit similar characteristics
+          and are subject to the same laws and regulations.
+      BUSINESS_UNIT:
+        definition: 'Any subdivision of a Business Platform, which is headed by an
+          Executive Director or any individual designated by the relevant Business
+          Platform CEO to carry out the authorities of such function within their
+          Units. '
+        include_allowed_values: true
+      ITD_RETURN:
+        definition: The annualized percentage rate of return from inception to measurement
+          date of the investment
+      YTD_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year to the in year measurement date (usually
+          month or quarter end). This should be compared against the other IRR / RETURN
+          metrics.
+      YTD_3_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 3 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      YTD_4_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 4 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      YTD_5_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 5 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      UNREALIZED_VALUE:
+        definition: The fair market value or exposure of an investment at a point
+          in time AED
+      YTD_TOTAL_PROCEEDS:
+        definition: The total proceeds (fair market value minus cash invested) from
+          the investment, over the period from start of the calendar year to the in
+          year measurement date (usually month or quarter end) in AED.
+      ITD_CASH_INVESTED:
+        definition: The total amount of cash invested in AED from inception to date.
+          Always represented as a negative value as it is an outflow.
+      YTD_CASH_INVESTED:
+        definition: The total amount of cash invested in AED over the period from
+          start of the calendar year to the in year measurement date (usually month
+          or quarter end) in AED. Always represented as a negative value as it is
+          an outflow.
+      ITD_TOTAL_PROCEEDS:
+        definition: The total proceeds (fair market value minus cash invested) from
+          the inception date for the investment in AED.
+      YTD_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year to the in year measurement date (usually
+          month or quarter end) in AED
+      YTD_3_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 3 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      YTD_4_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 4 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      YTD_5_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 5 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      ITD_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow from the inception
+          date for the investment in AED.
+  MIC_BY_REGION_VW:
+    view_name: MIC Region View
+    description: This view contains TIMESTAMPED key performance indicators for investments
+      aggregated at a region level only.
+    selector: Use this view when the question references aggregated metrics at the
+      region level only for all of Mubadala's investments. There is no data on individual
+      investments / deals in this view.DO NOT use if the question mentions platforms,
+      business units, investment or asset class,sectors or requires breakdowns by
+      these dimensions.
+    columns:
+      AS_ON_DATE_ID:
+        definition: Date the calculation was made expressed in the form YYYYMMDD.
+          Always take the latest entry by date, unless asked to compare dates, the
+          question targets a different time range or multi-years worth of data is
+          needed for a calculation.
+      YEAR:
+        definition: Year the calculation was made expressed in the form YYYY.
+      RECORD_TYPE:
+        definition: Record type indicating the period for calculation - includes quarterly
+          data (Q1, Q2, Q3, Q4) and year-to-date (YTD) information. This field helps
+          identify whether the metrics are for a specific quarter or cumulative year-to-date
+          performance.
+      PORTFOLIO:
+        definition: Portfolio identifier, either represents 'MIC' (Mubadala Investment
+          Company) or 'ADIC' (Abu Dhabi Investment Council)
+      REGION:
+        definition: Each country falls under a specific region
+        include_allowed_values: true
+      ITD_RETURN:
+        definition: The annualized percentage rate of return from inception to measurement
+          date of the investment
+      YTD_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year to the in year measurement date (usually
+          month or quarter end). This should be compared against the other IRR / RETURN
+          metrics.
+      YTD_3_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 3 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      YTD_4_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 4 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      YTD_5_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 5 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      UNREALIZED_VALUE:
+        definition: The fair market value or exposure of an investment at a point
+          in time AED
+      YTD_TOTAL_PROCEEDS:
+        definition: The total proceeds (fair market value minus cash invested) from
+          the investment, over the period from start of the calendar year to the in
+          year measurement date (usually month or quarter end) in AED.
+      ITD_CASH_INVESTED:
+        definition: The total amount of cash invested in AED from inception to date.
+          Always represented as a negative value as it is an outflow.
+      YTD_CASH_INVESTED:
+        definition: The total amount of cash invested in AED over the period from
+          start of the calendar year to the in year measurement date (usually month
+          or quarter end) in AED. Always represented as a negative value as it is
+          an outflow.
+      ITD_TOTAL_PROCEEDS:
+        definition: The total proceeds (fair market value minus cash invested) from
+          the inception date for the investment in AED.
+      YTD_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year to the in year measurement date (usually
+          month or quarter end) in AED
+      YTD_3_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 3 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      YTD_4_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 4 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      YTD_5_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 5 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      ITD_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow from the inception
+          date for the investment in AED.
+  PLATFORM_BY_REGION_VW:
+    view_name: Platform Region View
+    description: This view contains TIMESTAMPED key performance indicators for investments
+      aggregated at BOTH region and platform level.
+    selector: Use this view when the question references aggregated metrics at BOTH
+      region and platform level. There is no data on individual investments / deals
+      in this view.DO NOT use if the question mentions business units, geographical
+      dimensions, or requires breakdowns by these dimensions.
+    columns:
+      AS_ON_DATE_ID:
+        definition: Date the calculation was made expressed in the form YYYYMMDD.
+          Always take the latest entry by date, unless asked to compare dates, the
+          question targets a different time range or multi-years worth of data is
+          needed for a calculation.
+      YEAR:
+        definition: Year the calculation was made expressed in the form YYYY.
+      RECORD_TYPE:
+        definition: Record type indicating the period for calculation - includes quarterly
+          data (Q1, Q2, Q3, Q4) and year-to-date (YTD) information. This field helps
+          identify whether the metrics are for a specific quarter or cumulative year-to-date
+          performance.
+      REGION:
+        definition: Each country falls under a specific region
+        include_allowed_values: true
+      PLATFORM:
+        definition: Mubadala’s Business Platform, Corporate Platform or Group CEO
+          & Managing Director Platform
+        include_allowed_values: true
+      ITD_RETURN:
+        definition: The annualized percentage rate of return from inception to measurement
+          date of the investment
+      YTD_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year to the in year measurement date (usually
+          month or quarter end). This should be compared against the other IRR / RETURN
+          metrics.
+      YTD_3_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 3 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      YTD_4_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 4 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      YTD_5_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 5 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      UNREALIZED_VALUE:
+        definition: The fair market value or exposure of an investment at a point
+          in time AED
+      YTD_TOTAL_PROCEEDS:
+        definition: The total proceeds (fair market value minus cash invested) from
+          the investment, over the period from start of the calendar year to the in
+          year measurement date (usually month or quarter end) in AED.
+      ITD_CASH_INVESTED:
+        definition: The total amount of cash invested in AED from inception to date.
+          Always represented as a negative value as it is an outflow.
+      YTD_CASH_INVESTED:
+        definition: The total amount of cash invested in AED over the period from
+          start of the calendar year to the in year measurement date (usually month
+          or quarter end) in AED. Always represented as a negative value as it is
+          an outflow.
+      ITD_TOTAL_PROCEEDS:
+        definition: The total proceeds (fair market value minus cash invested) from
+          the inception date for the investment in AED.
+      YTD_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year to the in year measurement date (usually
+          month or quarter end) in AED
+      YTD_3_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 3 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      YTD_4_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 4 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      YTD_5_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 5 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      ITD_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow from the inception
+          date for the investment in AED.
+  BUSINESS_UNIT_BY_REGION_VW:
+    view_name: Business Unit Region View
+    description: This view contains TIMESTAMPED key performance indicators for investments
+      aggregated at BOTH region and  business unit level.
+    selector: Use this view when the question references aggregated metrics at BOTH
+      region and  business unit level. There is no data on individual investments
+      / deals in this view.
+    columns:
+      AS_ON_DATE_ID:
+        definition: Date the calculation was made expressed in the form YYYYMMDD.
+          Always take the latest entry by date, unless asked to compare dates, the
+          question targets a different time range or multi-years worth of data is
+          needed for a calculation.
+      YEAR:
+        definition: Year the calculation was made expressed in the form YYYY.
+      RECORD_TYPE:
+        definition: Record type indicating the period for calculation - includes quarterly
+          data (Q1, Q2, Q3, Q4) and year-to-date (YTD) information. This field helps
+          identify whether the metrics are for a specific quarter or cumulative year-to-date
+          performance.
+      REGION:
+        definition: Each country falls under a specific region
+        include_allowed_values: true
+      BUSINESS_UNIT:
+        definition: 'Any subdivision of a Business Platform, which is headed by an
+          Executive Director or any individual designated by the relevant Business
+          Platform CEO to carry out the authorities of such function within their
+          Units. '
+        include_allowed_values: true
+      ITD_RETURN:
+        definition: The annualized percentage rate of return from inception to measurement
+          date of the investment
+      YTD_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year to the in year measurement date (usually
+          month or quarter end). This should be compared against the other IRR / RETURN
+          metrics.
+      YTD_3_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 3 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      YTD_4_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 4 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      YTD_5_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 5 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      UNREALIZED_VALUE:
+        definition: The fair market value or exposure of an investment at a point
+          in time AED
+      YTD_TOTAL_PROCEEDS:
+        definition: The total proceeds (fair market value minus cash invested) from
+          the investment, over the period from start of the calendar year to the in
+          year measurement date (usually month or quarter end) in AED.
+      ITD_CASH_INVESTED:
+        definition: The total amount of cash invested in AED from inception to date.
+          Always represented as a negative value as it is an outflow.
+      YTD_CASH_INVESTED:
+        definition: The total amount of cash invested in AED over the period from
+          start of the calendar year to the in year measurement date (usually month
+          or quarter end) in AED. Always represented as a negative value as it is
+          an outflow.
+      ITD_TOTAL_PROCEEDS:
+        definition: The total proceeds (fair market value minus cash invested) from
+          the inception date for the investment in AED.
+      YTD_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year to the in year measurement date (usually
+          month or quarter end) in AED
+      YTD_3_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 3 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      YTD_4_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 4 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      YTD_5_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 5 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      ITD_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow from the inception
+          date for the investment in AED.
+  MIC_BY_COUNTRY_VW:
+    view_name: MIC Country View
+    description: This view contains TIMESTAMPED key performance indicators for investments
+      aggregated at a country level only.
+    selector: Use this view when the question references aggregated metrics at the
+      country level only for all of Mubadala's investments. There is no data on individual
+      investments / deals in this view.DO NOT use if the question mentions platforms,
+      business units, investment class, or requires breakdowns by these dimensions.
+    columns:
+      AS_ON_DATE_ID:
+        definition: Date the calculation was made expressed in the form YYYYMMDD.
+          Always take the latest entry by date, unless asked to compare dates, the
+          question targets a different time range or multi-years worth of data is
+          needed for a calculation.
+      PORTFOLIO:
+        definition: Portfolio identifier, either represents 'MIC' (Mubadala Investment
+          Company) or 'ADIC' (Abu Dhabi Investment Council)
+      COUNTRY:
+        definition: 'For direct investments: country where HQ is located. For Fund
+          investments: country of GP. Do NOT use this column in SQL ''WHERE'' filtering,
+          instead use COUNTRY_ISO_CODE2 or COUNTRY_ISO_CODE3 with the corresponding
+          code.'
+        include_allowed_values: true
+      COUNTRY_ISO_CODE2:
+        definition: Standardized country Iso code2. Use this column in SQL 'WHERE'
+          filtering instead of COUNTRY.
+      COUNTRY_ISO_CODE3:
+        definition: Standardized country Iso code3. Use this column in SQL 'WHERE'
+          filtering instead of COUNTRY.
+      ITD_RETURN:
+        definition: The annualized percentage rate of return from inception to measurement
+          date of the investment
+      YTD_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year to the in year measurement date (usually
+          month or quarter end). This should be compared against the other IRR / RETURN
+          metrics.
+      YTD_3_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 3 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      YTD_4_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 4 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      YTD_5_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 5 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      UNREALIZED_VALUE:
+        definition: The fair market value or exposure of an investment at a point
+          in time AED
+      YTD_TOTAL_PROCEEDS:
+        definition: The total proceeds (fair market value minus cash invested) from
+          the investment, over the period from start of the calendar year to the in
+          year measurement date (usually month or quarter end) in AED.
+      ITD_CASH_INVESTED:
+        definition: The total amount of cash invested in AED from inception to date.
+          Always represented as a negative value as it is an outflow.
+      YTD_CASH_INVESTED:
+        definition: The total amount of cash invested in AED over the period from
+          start of the calendar year to the in year measurement date (usually month
+          or quarter end) in AED. Always represented as a negative value as it is
+          an outflow.
+      ITD_TOTAL_PROCEEDS:
+        definition: The total proceeds (fair market value minus cash invested) from
+          the inception date for the investment in AED.
+      YTD_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year to the in year measurement date (usually
+          month or quarter end) in AED
+      YTD_3_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 3 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      YTD_4_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 4 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      YTD_5_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 5 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      ITD_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow from the inception
+          date for the investment in AED.
+  PLATFORM_BY_COUNTRY_VW:
+    view_name: Platform Country View
+    description: This view contains TIMESTAMPED key performance indicators for investments
+      aggregated at BOTH country and platform level.
+    selector: Use this view when the question references aggregated metrics at both
+      country and platform level (e.g., 'Platform X in Country Y'). There is no data
+      on individual investments / deals in this view.DO NOT use if the question mentions
+      business units,investment class, or requires breakdowns by these dimensions.
+    columns:
+      AS_ON_DATE_ID:
+        definition: Date the calculation was made expressed in the form YYYYMMDD.
+          Always take the latest entry by date, unless asked to compare dates, the
+          question targets a different time range or multi-years worth of data is
+          needed for a calculation.
+      YEAR:
+        definition: Year the calculation was made expressed in the form YYYY.
+      RECORD_TYPE:
+        definition: Record type indicating the period for calculation - includes quarterly
+          data (Q1, Q2, Q3, Q4) and year-to-date (YTD) information. This field helps
+          identify whether the metrics are for a specific quarter or cumulative year-to-date
+          performance.
+      COUNTRY:
+        definition: 'For direct investments: country where HQ is located. For Fund
+          investments: country of GP. Do NOT use this column in SQL ''WHERE'' filtering,
+          instead use COUNTRY_ISO_CODE2 or COUNTRY_ISO_CODE3 with the corresponding
+          code.'
+        include_allowed_values: true
+      COUNTRY_ISO_CODE2:
+        definition: Standardized country Iso code2. Use this column in SQL 'WHERE'
+          filtering instead of COUNTRY.
+      COUNTRY_ISO_CODE3:
+        definition: Standardized country Iso code3. Use this column in SQL 'WHERE'
+          filtering instead of COUNTRY.
+      PLATFORM:
+        definition: Mubadala’s Business Platform, Corporate Platform or Group CEO
+          & Managing Director Platform
+        include_allowed_values: true
+      ITD_RETURN:
+        definition: The annualized percentage rate of return from inception to measurement
+          date of the investment
+      YTD_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year to the in year measurement date (usually
+          month or quarter end). This should be compared against the other IRR / RETURN
+          metrics.
+      YTD_3_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 3 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      YTD_4_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 4 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      YTD_5_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 5 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      UNREALIZED_VALUE:
+        definition: The fair market value or exposure of an investment at a point
+          in time AED
+      YTD_TOTAL_PROCEEDS:
+        definition: The total proceeds (fair market value minus cash invested) from
+          the investment, over the period from start of the calendar year to the in
+          year measurement date (usually month or quarter end) in AED.
+      ITD_CASH_INVESTED:
+        definition: The total amount of cash invested in AED from inception to date.
+          Always represented as a negative value as it is an outflow.
+      YTD_CASH_INVESTED:
+        definition: The total amount of cash invested in AED over the period from
+          start of the calendar year to the in year measurement date (usually month
+          or quarter end) in AED. Always represented as a negative value as it is
+          an outflow.
+      ITD_TOTAL_PROCEEDS:
+        definition: The total proceeds (fair market value minus cash invested) from
+          the inception date for the investment in AED.
+      YTD_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year to the in year measurement date (usually
+          month or quarter end) in AED
+      YTD_3_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 3 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      YTD_4_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 4 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      YTD_5_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 5 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      ITD_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow from the inception
+          date for the investment in AED.
+  BUSINESS_UNIT_BY_COUNTRY_VW:
+    view_name: Business Unit Country View
+    description: This view contains TIMESTAMPED key performance indicators for investments
+      aggregated at BOTH country and business unit level.
+    selector: Use this view when the question references aggregated metrics at BOTH
+      country and business unit level. There is no data on individual investments
+      / deals in this view.DO NOT use if the question mentions platforms,investment
+      class, or requires breakdowns by these dimensions.
+    columns:
+      AS_ON_DATE_ID:
+        definition: Date the calculation was made expressed in the form YYYYMMDD.
+          Always take the latest entry by date, unless asked to compare dates, the
+          question targets a different time range or multi-years worth of data is
+          needed for a calculation.
+      YEAR:
+        definition: Year the calculation was made expressed in the form YYYY.
+      RECORD_TYPE:
+        definition: Record type indicating the period for calculation - includes quarterly
+          data (Q1, Q2, Q3, Q4) and year-to-date (YTD) information. This field helps
+          identify whether the metrics are for a specific quarter or cumulative year-to-date
+          performance.
+      COUNTRY:
+        definition: 'For direct investments: country where HQ is located. For Fund
+          investments: country of GP. Do NOT use this column in SQL ''WHERE'' filtering,
+          instead use COUNTRY_ISO_CODE2 or COUNTRY_ISO_CODE3 with the corresponding
+          code.'
+        include_allowed_values: true
+      COUNTRY_ISO_CODE2:
+        definition: Standardized country Iso code2. Use this column in SQL 'WHERE'
+          filtering instead of COUNTRY.
+      COUNTRY_ISO_CODE3:
+        definition: Standardized country Iso code3. Use this column in SQL 'WHERE'
+          filtering instead of COUNTRY.
+      BUSINESS_UNIT:
+        definition: 'Any subdivision of a Business Platform, which is headed by an
+          Executive Director or any individual designated by the relevant Business
+          Platform CEO to carry out the authorities of such function within their
+          Units. '
+        include_allowed_values: true
+      ITD_RETURN:
+        definition: The annualized percentage rate of return from inception to measurement
+          date of the investment
+      YTD_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year to the in year measurement date (usually
+          month or quarter end). This should be compared against the other IRR / RETURN
+          metrics.
+      YTD_3_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 3 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      YTD_4_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 4 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      YTD_5_RETURN:
+        definition: The percentage Internal Rate of Return (IRR) generated over the
+          period from start of the calendar year, 5 years ago, to the in year measurement
+          date (usually month or quarter end). This should be compared against the
+          other IRR / RETURN metrics.
+      UNREALIZED_VALUE:
+        definition: The fair market value or exposure of an investment at a point
+          in time AED
+      YTD_TOTAL_PROCEEDS:
+        definition: The total proceeds (fair market value minus cash invested) from
+          the investment, over the period from start of the calendar year to the in
+          year measurement date (usually month or quarter end) in AED.
+      ITD_CASH_INVESTED:
+        definition: The total amount of cash invested in AED from inception to date.
+          Always represented as a negative value as it is an outflow.
+      YTD_CASH_INVESTED:
+        definition: The total amount of cash invested in AED over the period from
+          start of the calendar year to the in year measurement date (usually month
+          or quarter end) in AED. Always represented as a negative value as it is
+          an outflow.
+      ITD_TOTAL_PROCEEDS:
+        definition: The total proceeds (fair market value minus cash invested) from
+          the inception date for the investment in AED.
+      YTD_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year to the in year measurement date (usually
+          month or quarter end) in AED
+      YTD_3_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 3 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      YTD_4_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 4 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      YTD_5_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow over the period
+          from start of the calendar year, 5 years ago, to the in year measurement
+          date (usually month or quarter end) in AED
+      ITD_VALUE_CREATION:
+        definition: The change in Unrealized Value plus Net Cashflow from the inception
+          date for the investment in AED.
+  ALLOCATION_VW:
+    view_name: Allocations View
+    description: This view contains TIMESTAMPED information on allocated capital,
+      consumption, and remaining balances segmented by platform and year. It includes
+      historical and projected allocations with carryover calculations.
+    selector: Use this view if the question references allocated and consumed capital
+      for a given platform by year, including carryover balances and allocation adjustments.
+    columns:
+      PLATFORM:
+        definition: Mubadala’s Business Platform, Corporate Platform or Group CEO
+          & Managing Director Platform
+        include_allowed_values: true
+      YEAR:
+        definition: Year the calculation was made expressed in the form YYYY.
+      ALLOCATION_APPROVED_AED_MN:
+        definition: The originally approved allocation amount for the platform in
+          the given year, expressed in millions of AED. This is the original budget
+          allocated to the platform for that year. This does not include carryover.
+      ALLOCATION_ADJUSTMENTS:
+        definition: Any adjustments made to the original approved allocation during
+          the year, expressed in millions of AED
+      CONSUMPTION:
+        definition: The actual amount of allocated capital consumed/spent by the platform
+          during the year, expressed in millions of AED
+      REMAINING_BALANCE:
+        definition: The remaining unspent allocation balance at the end of the year,
+          calculated as approved allocation plus adjustments minus consumption, expressed
+          in millions of AED. This does not include carryover from previous years.
+      FINAL_BALANCE_UPDATE_CARRYOVER:
+        definition: The final remaining balance including carryover from previous
+          years that can be utilized in future periods calculated as approved allocation
+          plus adjustments plus carryover minus consumption. This is the final remaining
+          amount of capital available for the platform after accounting for carryover
+          from previous years.
+      FINAL_ALLOCATION_APPROVED_CARRYOVER:
+        definition: The total approved allocation including carryover amounts from
+          previous years, representing the total capital available for allocation,
+          expressed in millions of AED. This is the final budget allocated to the
+          platform for that year, including any carryover from previous years.
+      INSERTED_DTTM:
+        definition: Timestamp when the record was inserted into the database system
+  CONSUMPTION_VW:
+    view_name: Consumption View
+    description: 'This view contains '
+    selector: Use this view if the question references to consumption of allocation
+      capital at deal level. This view contains information on capital expenditure
+      at a deal, business unit and platform level.
+    columns:
+      DEAL_ID:
+        definition: Unique ID for a deal
+      PLATFORM:
+        definition: Mubadala’s Business Platform, Corporate Platform or Group CEO
+          & Managing Director Platform
+        include_allowed_values: true
+      BUSINESS_UNIT:
+        definition: 'Any subdivision of a Business Platform, which is headed by an
+          Executive Director or any individual designated by the relevant Business
+          Platform CEO to carry out the authorities of such function within their
+          Units. '
+        include_allowed_values: true
+      DEAL_TYPES:
+        definition: The types of deals
+      DEAL_NAME:
+        definition: An internal name assigned to a deal to ensure confidentiality.
+          Always return in combination with TARGET_NAME.
+      DEAL_STATUS:
+        definition: The status of a deal, if active, on hold, passed, lost, canceled
+          or closed
+        include_allowed_values: true
+      OPPORTUNITY_LIFECYCLE_STAGE:
+        definition: ''
+      FINAL_APPROVING_COMMITTEE_DECISION:
+        definition: Committee the deal needs to be presented to for approval's investment
+          decision
+      FINAL_APPROVING_COMMITTEE:
+        definition: Committee the deal needs to be presented to for approval.
+        include_allowed_values: true
+      INVESTMENT_CURRENCY:
+        definition: The currency in which the investment is made
+      EXPECTED_TICKET_SIZE_INVESTMENT_CURRENCY_MN:
+        definition: Expected investment amount in the investment currency
+      EXPECTED_TICKET_SIZE_AED_MN:
+        definition: Expected investment amount in AED currency
+      LATEST_CASH_FORECAST:
+        definition: Cash forecast
+      ADJUSTMENTS:
+        definition: Any adjustments
+      CONSUMPTION:
+        definition: The consumption of the allocated capital that this deal will use
+      INVESTMENT_CLASS:
+        definition: A class of an investment; specifically, private company, public
+          company, fund-private, fund-public
+        include_allowed_values: true
+      ASSET_CLASS:
+        definition: A grouping of investments that exhibit similar characteristics
+          and are subject to the same laws and regulations. These include Public Equity,
+          Venture Capital, Private Equity, Real Estate, Infrastructure, Bonds, Credit,
+          Hedge Funds, Derivatives and Cash
+        include_allowed_values: true
+      ASSET_SUB_CLASS:
+        definition: A subdivsion of asset class
+        include_allowed_values: true
+      COUNTRY:
+        definition: Country of the deal
+        include_allowed_values: true
+      REGION:
+        definition: region of the focus for the deal
+        include_allowed_values: true
+      REGION_OF_FUND:
+        definition: Region of focus according to the fund's investment strategy
+      GICS_SECTOR:
+        definition: Level 1 Global Industry Classification Standard
+        include_allowed_values: true
+      GICS_INDUSTRY_GROUP:
+        definition: Level 2 Global Industry Classification Standard
+        include_allowed_values: true
+      GICS_INDUSTRY:
+        definition: Level 1 Global Industry Classification Standard
+        include_allowed_values: true
+      GICS_SUBINDUSTRY:
+        definition: Level 4 Global Industry Classification Standard
+      BASE_CASE_TARGET_IRR:
+        definition: The expected percentage rate of return (IRR) based on a realistic
+          scenario, incorporating reasonable assumptions about market conditions and
+          cash flows for the deal.
+      BASE_CASE_TARGET_MOIC:
+        definition: The expected Multiple on Investment Capital (MOIC also known as
+          TVPI) based on a realistic scenario, incorporating reasonable assumptions
+          about market conditions and cash flows for the deal.
+      TARGET_OWNERSHIP_STAKE:
+        definition: The percentage of target Mubadala stake to be owned in a company
+      TARGET_HOLDING_PERIOD_YEARS:
+        definition: The target holding period of the deal in years.
+      CO_INVESTMENT_FLAG:
+        definition: Is this a co - investment
+      PARTNERS:
+        definition: Who are the partners
+      CRIEF_DESCRIPTION:
+        definition: Brief description of the deal
+      WEIGHTED_AVERAGE_IRR:
+        definition: Weighted average IRR
+      AS_OF_DATE:
+        definition: Date the calculation for cash forecast was made.
+      INSERTED_DTTM:
+        definition: Timestamp when it was inserted into tracker

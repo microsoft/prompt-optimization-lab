@@ -1,0 +1,478 @@
+question_id,question,conversation_history,selected_views_pred,selected_views_actual,reasoning,match,Business_views,expected_views
+32,What is MICs current exposure in the GCC in Private Equity platform?,[],,,,,,PLATFORM_BY_COUNTRY_VW
+30,What is MICs current exposure in the USA in PE asset class?,[],,,,,,INVESTMENT_KPI_VW
+31,What is MICs current exposure in the USA in PE platform?,[],,,,,,PLATFORM_BY_COUNTRY_VW
+0,What is MICs current exposure in the USA in PE?,[],"['MIC_BY_COUNTRY_VW', 'INVESTMENT_KPI_VW']","MIC_BY_ASSET_CLASS_VW, MIC_BY_COUNTRY_VW","The question asks for ""MIC's current exposure in the USA in PE."" Let's break this down:
+- ""MIC"" refers to Mubadala Investment Company, so we need data at the MIC (portfolio) level.
+- ""Current exposure"" means the present fair market value or unrealized value of investments.
+- ""USA"" means we need a breakdown by country, specifically ""United States of America.""
+- ""PE"" means Private Equity, which is an asset class.
+
+We need a view that can provide:
+- Aggregated exposure (unrealized value) for MIC
+- Filtered by country (USA)
+- Filtered by asset class (Private Equity)
+
+Reviewing the candidate views:
+- MIC KPI View: Aggregated for all of MIC, but does NOT break down by country or asset class.
+- MIC Asset Class View: Aggregated by asset class, but NOT by country.
+- MIC Country View: Aggregated by country, but NOT by asset class.
+- Platform Country View: Aggregated by platform and country, but not at the MIC (all-platform) level.
+- Platform Asset Class View: Aggregated by platform and asset class, but not by country.
+- Investment KPI View: Can filter by asset class and country at the individual investment level, but not aggregated at the MIC level.
+- Business Unit/Region/Sector/Investment Class Views: Not relevant as the question is not about business units, regions, or sectors.
+
+The only view that provides both country and asset class breakdowns at the MIC level is missing. However, the closest match is MIC Country View, which gives exposure by country, and Investment KPI View, which can be used to filter for asset class and country at the deal level and aggregate up.
+
+Therefore, the best approach is to use both:
+- MIC Country View: For total exposure in the USA (but not filtered by asset class).
+- Investment KPI View: To filter for investments in the USA and in Private Equity, then sum the unrealized value for current exposure.
+
+Per the selectors, when aggregated views lack required filter dimensions, use Investment KPI View in parallel.",0,"If PE is referred to as platform then PLATFORM_BY_COUNTRY_VW , if PE is referred to as asset class then INVESTMENT_KPI_VW","PLATFORM_BY_COUNTRY_VW, INVESTMENT_KPI_VW"
+1,What is MICs current exposure in the GCC in Private Equity?,[],"['PLATFORM_BY_REGION_VW', 'PLATFORM_BY_COUNTRY_VW']","MIC_BY_ASSET_CLASS_VW, MIC_BY_REGION_VW","The user is asking for MIC's (Mubadala Investment Company) current exposure in the GCC (Gulf Cooperation Council) in Private Equity. ""Current exposure"" typically refers to the fair market value or unrealized value of investments. The GCC is a regional grouping, so the answer must be filtered by region (GCC countries: Bahrain, Kuwait, Oman, Qatar, Saudi Arabia, United Arab Emirates).
+
+Key requirements:
+- Aggregated exposure (not deal-level, not business unit, not sector, not asset class breakdowns, but by region and platform/investment class).
+- Must be for MIC (not ADIC).
+- Must be for Private Equity (either as platform or asset/investment class).
+- Must be for the GCC region (which is a subset of ""Middle East & North Africa"" or can be filtered by specific countries).
+
+View analysis:
+- MIC KPI View: Aggregated for all of MIC, but does not allow regional or asset class breakdowns.
+- MIC Region View: Aggregated at region level for all of MIC, but does not allow filtering by asset/investment class or platform.
+- MIC Country View: Aggregated at country level for all of MIC, but does not allow filtering by asset/investment class or platform.
+- MIC Asset Class View: Aggregated at asset class level for all of MIC, but does not allow regional breakdowns.
+- Platform Region View: Aggregated at BOTH region and platform level. This allows filtering for Private Equity platform and for GCC region (by country or by ""Middle East & North Africa"").
+- Platform Country View: Aggregated at BOTH country and platform level. This allows filtering for Private Equity platform and for each GCC country.
+- Platform KPI View: Aggregated at platform level only, no regional breakdown.
+- Platform Investment Class View: Aggregated at BOTH investment class and platform, but not by region/country.
+- Investment KPI View: Individual investment level, can be filtered by region/country and asset class, but is not aggregated.
+- Business Unit/Asset Class/Sector views: Not relevant, as the question is not about business units or sectors.
+
+Best fit:
+- Platform Region View (PLATFORM_BY_REGION_VW): Allows aggregation by platform (Private Equity) and region (can select ""Middle East & North Africa"" or sum up GCC countries if available).
+- Platform Country View (PLATFORM_BY_COUNTRY_VW): Allows aggregation by platform (Private Equity) and by each GCC country, for more granular breakdown if needed.
+
+Therefore, both Platform Region View and Platform Country View are relevant, as they allow the required breakdowns for MIC's Private Equity exposure in the GCC.",0,"If PE is referred to as platform then PLATFORM_BY_COUNTRY_VW , if PE is referred to as asset class then INVESTMENT_KPI_VW","PLATFORM_BY_COUNTRY_VW, INVESTMENT_KPI_VW"
+2,"In FinTech, report the current exposure for Europe for Group (MIC).",[],['MIC_BY_REGION_VW'],"MIC_BY_REGION_VW, MIC_BY_SECTOR_VW","The user is asking for the ""current exposure for Europe for Group (MIC)"" in the context of FinTech. Let's break down the requirements:
+
+- ""Current exposure"" typically refers to the fair market value or unrealized value of investments.
+- ""Europe"" is a geographical region.
+- ""Group (MIC)"" refers to the Mubadala Investment Company at the group/portfolio level, not a specific platform, business unit, or sector.
+- The user wants the data segmented by region (Europe) for the MIC group.
+
+From the candidate views:
+- MIC_KPI_VW: Aggregates across all of MIC, but does NOT provide breakdowns by region, sector, or geography.
+- MIC_BY_REGION_VW: Aggregates at the region level for all of MIC, with ""Europe & Central Asia"" as a possible region value. This view provides exactly the required breakdown: exposure (unrealized value) for Europe for the MIC group.
+- PLATFORM_BY_REGION_VW: Aggregates by both platform and region, but the user did not request a platform breakdown.
+- MIC_BY_COUNTRY_VW: Aggregates by country, but the user asked for region, not country.
+- Other views (sector, asset class, investment class, business unit, deal-level) are not relevant because the user did not request those breakdowns.
+
+Therefore, the best and only directly relevant view is MIC_BY_REGION_VW, as it provides current exposure (unrealized value) for the Europe region at the MIC group level.",0,"Assuming Fintech is platform , PLATFORM_BY_REGION_VW",<NO_VIEWS>
+3,"In Pharmaceuticals, report the current exposures across all platforms and units.",[],"['PLATFORM_BY_SECTOR_VW', 'BUSINESS_UNIT_BY_SECTOR_VW']","BUSINESS_UNIT_BY_SECTOR_VW, PLATFORM_BY_SECTOR_VW","The user is asking for the ""current exposures across all platforms and units"" specifically in ""Pharmaceuticals."" This requires:
+
+1. ""Current exposures"" implies the latest fair market value or unrealized value, which is typically represented by the ""UNREALIZED_VALUE"" field in the KPI views.
+2. ""Across all platforms and units"" means the answer must be broken down by both platform and business unit, not just one or the other, and not as a total aggregate.
+3. ""Pharmaceuticals"" is a sector/industry. In the database, this is represented by the GICS sector/industry classification, specifically ""Pharmaceuticals"" in the GICS_INDUSTRY or GICS_SECTOR columns.
+
+View selection logic:
+- Views that aggregate only by platform (Platform KPI View) or only by business unit (Business Unit KPI View) are not sufficient, as the user wants a breakdown by both.
+- Views that aggregate by both platform and sector (Platform Sector View) are close, but do not include business unit breakdowns.
+- Views that aggregate by both business unit and sector (Business Unit Sector View) provide metrics at BOTH business unit and sector level, but not platform.
+- The only view that allows for breakdown by BOTH platform and sector is the ""PLATFORM_BY_SECTOR_VW"" (Platform Sector View). However, it does not include business unit.
+- The only view that allows for breakdown by BOTH business unit and sector is the ""BUSINESS_UNIT_BY_SECTOR_VW"" (Business Unit Sector View). It does not include platform.
+- There is no view that aggregates by platform, business unit, and sector simultaneously.
+
+Therefore, to answer the question as fully as possible, we need to use BOTH:
+- PLATFORM_BY_SECTOR_VW: to get exposures by platform in Pharmaceuticals.
+- BUSINESS_UNIT_BY_SECTOR_VW: to get exposures by business unit in Pharmaceuticals.
+
+Both views have a GICS_SECTOR column, but the user asked for ""Pharmaceuticals,"" which is a GICS_INDUSTRY, not a sector. However, in these views, the closest mapping is GICS_SECTOR = ""35 - Health Care"", and within that, the industry ""Pharmaceuticals"" is a subset. Since the views only allow filtering at the sector level, we can only provide exposures for the Health Care sector, or, if the view allows, filter for ""Pharmaceuticals"" if present in the GICS_SECTOR or GICS_INDUSTRY columns.
+
+In summary, to provide the best possible answer, select both PLATFORM_BY_SECTOR_VW and BUSINESS_UNIT_BY_SECTOR_VW, filtering for the sector/industry ""Pharmaceuticals"" (or ""35 - Health Care"" if ""Pharmaceuticals"" is not available).",1,INVESTMENT_KPI_VW,INVESTMENT_KPI_VW
+4,Report the exposures for Real Assets in the UAE.,[],['PLATFORM_BY_COUNTRY_VW'],"MIC_BY_ASSET_CLASS_VW, MIC_BY_COUNTRY_VW","The user is asking for ""exposures for Real Assets in the UAE."" This means they want to know the value (exposure) of investments that are both:
+- Under the ""Real Assets"" platform
+- Located in the UAE (United Arab Emirates)
+
+To answer this, we need a view that allows filtering by both platform (""Real Assets"") and country (""United Arab Emirates"" or UAE). Let's analyze the candidate views:
+
+1. **Active Deal List**: Contains deal-level data, including platform and geography, but is focused on active and closed deals, not aggregated exposures. Not optimal for aggregated exposure reporting.
+
+2. **Investment KPI View**: Contains deal-level KPIs, including platform and country, but is not an aggregated view. Could be used for detailed breakdowns, but not for high-level exposure reporting.
+
+3. **Platform KPI View**: Aggregates by platform only, but does not allow filtering by country/geography. Not suitable.
+
+4. **Business Unit KPI View**: Aggregates by business unit only, not by platform and country together.
+
+5. **Platform Country View**: Aggregates by both platform and country. Columns include PLATFORM (with ""Real Assets"" as an allowed value) and COUNTRY (with ""United Arab Emirates"" as an allowed value). This view is designed for questions that require exposure (unrealized value) for a specific platform in a specific country. This is the best fit.
+
+6. **MIC KPI View, MIC Country View, MIC Region View, etc.**: These aggregate at the company, country, or region level, but not by platform and country together.
+
+7. **Other views (Allocations, Consumption, etc.)**: These are for capital allocation/consumption, not for reporting exposures.
+
+Therefore, the best and only directly relevant view is **PLATFORM_BY_COUNTRY_VW** (""Platform Country View""), as it allows us to report exposures for the ""Real Assets"" platform in the ""United Arab Emirates"".",0,PLATFORM_BY_REGION_VW,PLATFORM_BY_REGION_VW
+5,Country: Report Group exposure by country.,[],['MIC_BY_COUNTRY_VW'],MIC_BY_COUNTRY_VW,"The user is asking for ""Report Group exposure by country."" The key requirement is to report exposure (which typically refers to unrealized value or fair market value) at the country level, i.e., how much is invested or exposed in each country. The question does not mention platforms, business units, investment class, or require breakdowns by these dimensions—just a country-level aggregation.
+
+Reviewing the candidate views:
+- MIC Country View (MIC_BY_COUNTRY_VW) is specifically designed for ""aggregated metrics at the country level only for all of Mubadala's investments."" It contains columns such as COUNTRY, UNREALIZED_VALUE, and other relevant financial KPIs. The selector explicitly says to use this view for country-level reporting and not to use it if breakdowns by platform, business unit, or investment class are required (which is not the case here).
+- Platform Country View, Business Unit Country View, and others provide breakdowns by platform or business unit in addition to country, which is not requested.
+- Investment KPI View and Active Deal List are for deal-level or investment-level data, not for aggregated country-level reporting.
+- MIC KPI View is for overall Mubadala metrics, not country-level.
+- Other views (sector, region, asset class, investment class) are not relevant as the question is about country.
+
+Therefore, the MIC Country View is the most appropriate and only necessary view for this request.",1,MIC_BY_COUNTRY_VW,MIC_BY_COUNTRY_VW
+6,Region: Report Group exposure by region.,[],['MIC_BY_REGION_VW'],MIC_BY_REGION_VW,"The user is asking for ""Report Group exposure by region."" The key term here is ""exposure by region,"" which implies an aggregated view of investment exposure (likely fair market value or unrealized value) grouped by region. The user does not specify a particular platform, business unit, sector, asset class, or investment class, nor do they request a breakdown by any of these dimensions. The request is for a group-level (i.e., Mubadala-wide) report, segmented only by region.
+
+Among the candidate views:
+- MIC Region View (MIC_BY_REGION_VW) is specifically designed for ""aggregated metrics at the region level only for all of Mubadala's investments."" It contains columns such as REGION and UNREALIZED_VALUE, which directly support reporting exposure by region.
+- Platform Region View, Business Unit Region View, and other ""by region"" views include additional breakdowns (by platform or business unit), which are not requested and thus not optimal.
+- Investment KPI View and Active Deal List are for deal-level or investment-level data, not for group-level regional aggregation.
+- MIC KPI View is for overall group-level metrics but does not provide regional breakdowns.
+- Other views (by sector, asset class, investment class, country, etc.) do not match the requested regional aggregation.
+
+Therefore, the MIC Region View is the most direct and appropriate view for this request.",1,MIC_BY_REGION_VW,MIC_BY_REGION_VW
+7,Asset Class: Report Group exposure by asset class.,[],['MIC_BY_ASSET_CLASS_VW'],MIC_BY_ASSET_CLASS_VW,"The user is asking for ""Report Group exposure by asset class."" The key terms here are ""exposure"" (which typically refers to the fair market value or unrealized value of investments) and ""by asset class"" (which means the data should be aggregated at the asset class level). The user also mentions ""Report Group,"" which, in the absence of further context, is interpreted as referring to the overall Mubadala group (i.e., all investments, not a specific platform, business unit, or sector).
+
+To select the correct view:
+- The view must provide exposure (unrealized value) aggregated by asset class.
+- The view should not require breakdowns by platform, business unit, sector, region, or country, unless the question specifically asks for those.
+- The view should not be at the individual deal/investment level.
+
+Reviewing the candidate views:
+- MIC Asset Class View (MIC_BY_ASSET_CLASS_VW) is specifically designed for ""aggregated metrics at the asset class level only for all of Mubadala's investments."" It contains the UNREALIZED_VALUE column, which represents exposure.
+- Other views (such as Business Unit Asset Class View, Platform Asset Class View, or deal-level views) are not appropriate because they either require additional breakdowns or are not at the group/aggregate level.
+
+Therefore, the MIC Asset Class View is the most appropriate and direct match for the user's request.",1,MIC_BY_ASSET_CLASS_VW,MIC_BY_ASSET_CLASS_VW
+8,GICS: Report Group exposure by GICS sector.,[],['MIC_BY_SECTOR_VW'],MIC_BY_SECTOR_VW,"The user is asking for ""Report Group exposure by GICS sector."" The key terms here are ""exposure"" (which typically refers to unrealized value or fair market value) and ""GICS sector"" (which is the Level 1 Global Industry Classification Standard). The phrase ""Report Group"" is ambiguous, but in Mubadala context, it usually refers to the overall group (i.e., Mubadala Investment Company as a whole), unless otherwise specified.
+
+To answer this, we need a view that provides exposure (unrealized value) aggregated by GICS sector for the entire group. Let's analyze the candidate views:
+
+- MIC Sector View (MIC_BY_SECTOR_VW): This view contains KPIs for investments aggregated at the sector level only for all of Mubadala's investments. It includes GICS_SECTOR and UNREALIZED_VALUE, which directly matches the requirement to report exposure by GICS sector at the group level.
+- Business Unit Sector View (BUSINESS_UNIT_BY_SECTOR_VW): This view aggregates by both business unit and sector, but the question does not ask for a business unit breakdown.
+- Platform Sector View (PLATFORM_BY_SECTOR_VW): This view aggregates by both platform and sector, but the question does not ask for a platform breakdown.
+- Investment KPI View and Active Deal List: These are deal-level views, not aggregated, and are not appropriate for a group-level sector exposure report.
+- MIC KPI View: This is for overall group-level metrics but does not provide a sector breakdown.
+- Other views (by region, country, asset class, investment class, or combinations) do not match the sector-level requirement.
+
+Therefore, the best and most direct match is the MIC Sector View (MIC_BY_SECTOR_VW), as it provides group-level exposure by GICS sector.",1,MIC_BY_SECTOR_VW,MIC_BY_SECTOR_VW
+9,Investment Class: Report Group exposure by investment class.,[],['MIC_BY_INVESTMENT_CLASS_VW'],MIC_BY_INVESTMENT_CLASS_VW,"The user is asking for ""Report Group exposure by investment class."" The key terms here are ""Group exposure"" (which refers to Mubadala as a whole, i.e., the group level) and ""by investment class"" (which means the data should be broken down by investment class, not by platform, sector, business unit, or geography).
+
+From the candidate views:
+- MIC Investment Class View (MIC_BY_INVESTMENT_CLASS_VW) is specifically designed for ""aggregated metrics at the investment class level for all of Mubadala's investments"" and does not include breakdowns by platform, sector, business unit, or geography. This matches the user's request exactly.
+- Platform Investment Class View, Business Unit Investment Class View, and others provide breakdowns at platform or business unit level, which is not requested.
+- The generic MIC KPI View is for overall group metrics but not broken down by investment class.
+- The detailed deal-level views (Active Deal List, Investment KPI View) are not relevant because the user wants aggregated exposure, not deal-level or historical performance.
+
+Therefore, the MIC Investment Class View is the most appropriate and only necessary view for this request.",1,MIC_BY_INVESTMENT_CLASS_VW,MIC_BY_INVESTMENT_CLASS_VW
+10,Exposure in Europe of Real Assets (Platform) and Infrastructure (Asset Class).,[],['INVESTMENT_KPI_VW'],"MIC_BY_ASSET_CLASS_VW, PLATFORM_BY_REGION_VW","The question asks for ""Exposure in Europe of Real Assets (Platform) and Infrastructure (Asset Class)."" This means we need to find the exposure (i.e., unrealized value or fair market value) for investments that are:
+- In the ""Real Assets"" platform
+- In the ""Infrastructure"" asset class
+- Located in ""Europe"" (region)
+
+To answer this, the view must support filtering by:
+- Platform (Real Assets)
+- Asset Class (Infrastructure)
+- Region (Europe)
+
+Reviewing the candidate views:
+- MIC_BY_REGION_VW: Aggregates by region only, not by platform or asset class.
+- PLATFORM_BY_REGION_VW: Aggregates by both platform and region, but not by asset class.
+- MIC_BY_ASSET_CLASS_VW: Aggregates by asset class only, not by platform or region.
+- PLATFORM_BY_COUNTRY_VW: Aggregates by platform and country, but not by asset class or region.
+- PLATFORM_BY_INVESTMENT_CLASS_VW: Aggregates by platform and investment class, not asset class or region.
+- PLATFORM_KPI_VW: Aggregates by platform only.
+- BUSINESS_UNIT_BY_REGION_VW: Aggregates by business unit and region, not platform or asset class.
+- BUSINESS_UNIT_BY_ASSET_CLASS_VW: Aggregates by business unit and asset class, not platform or region.
+- PLATFORM_BY_SECTOR_VW: Aggregates by platform and sector, not asset class or region.
+- INVESTMENT_KPI_VW: Has all the required columns (platform, asset class, region, country, etc.) at the individual investment level, so can be filtered for all three dimensions.
+- ACTIVE_DEAL_LIST_VW: Only for active/target deals, not for exposure of existing investments.
+- CONSUMPTION_VW: For capital consumption, not exposure.
+- ALLOCATION_VW: For capital allocation, not exposure.
+
+Therefore, the only view that allows filtering by all three required dimensions (platform, asset class, region) is INVESTMENT_KPI_VW. According to its selector, it should be used for historical or current exposure at the investment level, especially when multiple filter dimensions are needed and no aggregated view supports all required filters.",0,INVESTMENT_KPI_VW,INVESTMENT_KPI_VW
+11,Calculate the exposures for the USA in Real Assets and Infrastructure.,[],['INVESTMENT_KPI_VW'],"MIC_BY_ASSET_CLASS_VW, MIC_BY_COUNTRY_VW","The user is asking for ""exposures for the USA in Real Assets and Infrastructure."" This requires:
+- Exposure (i.e., unrealized value or fair market value) 
+- For the USA (country-level filter)
+- In the context of Real Assets (platform) and Infrastructure (asset class)
+
+To answer this, we need a view that allows filtering by:
+- Country (specifically USA)
+- Platform (Real Assets)
+- Asset Class (Infrastructure) or at least a way to distinguish between Real Assets and Infrastructure
+
+Let's review the candidate views:
+
+1. **MIC_BY_COUNTRY_VW**: Aggregates at country level, but does not allow filtering by platform or asset class. Not sufficient for the breakdown required.
+2. **PLATFORM_BY_COUNTRY_VW**: Aggregates at both platform and country level. Allows filtering by platform (Real Assets) and country (USA). However, it does not allow filtering by asset class (Infrastructure) within the platform.
+3. **MIC_BY_ASSET_CLASS_VW**: Aggregates at asset class level, but not by country or platform. Not sufficient.
+4. **PLATFORM_BY_REGION_VW**: Aggregates at platform and region, not country.
+5. **PLATFORM_BY_INVESTMENT_CLASS_VW**: Aggregates at platform and investment class, not country.
+6. **BUSINESS_UNIT_BY_COUNTRY_VW**: Aggregates at business unit and country, not platform or asset class.
+7. **INVESTMENT_KPI_VW**: Contains deal-level data, with columns for platform, asset class, and country (with ISO codes for filtering). This view allows for precise filtering: platform = Real Assets, asset class = Infrastructure, country = USA (using COUNTRY_ISO_CODE2/3). It also contains UNREALIZED_VALUE_AED, which is the exposure.
+8. **ACTIVE_DEAL_LIST_VW**: Contains deal-level data, but is more focused on active deals and target metrics, not current exposures.
+9. **PLATFORM_BY_COUNTRY_VW**: As above, allows platform and country, but not asset class.
+10. **CONSUMPTION_VW**: Focuses on capital consumption, not exposures.
+
+**Conclusion:** 
+- For ""exposures for the USA in Real Assets and Infrastructure,"" the only view that allows all three filters (platform, asset class, country) is the **INVESTMENT_KPI_VW**. 
+- If the user wanted only ""Real Assets in USA"" (regardless of asset class), PLATFORM_BY_COUNTRY_VW would suffice, but since they want the intersection of Real Assets (platform) and Infrastructure (asset class) in the USA, only INVESTMENT_KPI_VW is appropriate.",0,INVESTMENT_KPI_VW,INVESTMENT_KPI_VW
+12,What is the exposure for Direct Investment in the UAE and how has it changed vs last year?,[],['INVESTMENT_KPI_VW'],"MIC_BY_COUNTRY_VW, PLATFORM_BY_COUNTRY_VW","The user is asking for the exposure (i.e., fair market value or unrealized value) for Direct Investment in the UAE and how it has changed versus last year. This requires:
+- Filtering for ""Direct Investment"" (which is a deployment model, not an investment class or asset class).
+- Focusing on the UAE (country-level granularity).
+- Looking at exposure (unrealized value) and its change over time (i.e., year-on-year comparison).
+
+To answer this, we need a view that:
+- Allows filtering by deployment model = ""Direct Investment"".
+- Allows filtering by country = ""United Arab Emirates"".
+- Provides exposure (unrealized value) and is timestamped to allow comparison over time.
+
+Among the candidate views:
+- MIC_BY_COUNTRY_VW and PLATFORM_BY_COUNTRY_VW aggregate at the country level, but do NOT allow filtering by deployment model (Direct Investment) or asset/investment class, and do not provide deployment model breakdowns.
+- BUSINESS_UNIT_BY_COUNTRY_VW aggregates at business unit and country, but again, no deployment model filter.
+- INVESTMENT_KPI_VW is the only view that:
+    - Contains individual investment-level data.
+    - Has a ""DEPLOYMENT_MODEL"" column (so we can filter for ""Direct Investment"").
+    - Has ""COUNTRY_ISO_CODE2/3"" for precise country filtering (UAE).
+    - Has ""UNREALIZED_VALUE_AED"" for exposure.
+    - Is timestamped (AS_ON_DATE_ID/YEAR), so we can compare current vs last year.
+
+Therefore, INVESTMENT_KPI_VW is the only view that can answer the question as asked, since it allows for both the required filters and the necessary time-based comparison.",0,INVESTMENT_KPI_VW,INVESTMENT_KPI_VW
+13,5Y CAGR: Calculate the exposures for the USA for the past 5 years and report the CAGR.,[],['MIC_BY_COUNTRY_VW'],MIC_BY_COUNTRY_VW,"The user is asking for the 5-year CAGR (Compound Annual Growth Rate) and exposures for the USA (United States of America) over the past 5 years. This requires:
+- Aggregated data at the country level (specifically for the USA).
+- Historical exposures (likely ""UNREALIZED_VALUE"" or similar) for each of the past 5 years.
+- The ability to calculate CAGR, which requires time series data (values at the start and end of the 5-year period).
+
+From the candidate views:
+- MIC_BY_COUNTRY_VW (""MIC Country View"") provides TIMESTAMPED key performance indicators for investments aggregated at a country level, including ""UNREALIZED_VALUE"" (exposure) and annual data (YEAR, AS_ON_DATE_ID). It also includes the country ""United States of America"" as an allowed value. This view is specifically designed for country-level aggregation and is the most direct fit for the question.
+- PLATFORM_BY_COUNTRY_VW and BUSINESS_UNIT_BY_COUNTRY_VW also provide country-level data but are segmented by platform or business unit, which is not requested by the user.
+- INVESTMENT_KPI_VW provides deal-level data, but the user is not asking for individual investments, just the aggregate for the USA.
+- MIC_KPI_VW, PLATFORM_KPI_VW, and BUSINESS_UNIT_KPI_VW do not provide country-level breakdowns.
+
+Therefore, the best and only necessary view is MIC_BY_COUNTRY_VW, as it provides the required time series of exposures for the USA, allowing for CAGR calculation over 5 years.",1,MIC_BY_COUNTRY_VW,MIC_BY_COUNTRY_VW
+14,Top 10: Report the current exposures for the GCC and rank the top 10 investments.,[],['INVESTMENT_KPI_VW'],MIC_BY_REGION_VW,"The question asks for the ""current exposures for the GCC"" and to ""rank the top 10 investments."" ""Current exposures"" refers to the present fair market value or unrealized value of investments, and ""GCC"" (Gulf Cooperation Council) is a region, but the question is likely focused on the business unit or platform called ""GCC"" (which, in Mubadala's context, is often referred to as ""Group CEO & Managing Director Platform"" or similar, but here, based on the domain knowledge and platform list, it is not a standard platform name). However, the intent is to get exposures for a specific group or region and rank individual investments.
+
+To answer this, we need:
+- Individual investment-level data (to rank top 10 investments by exposure).
+- The most current (latest) exposure values.
+- The ability to filter by platform, business unit, or region if ""GCC"" is mapped to one of those.
+
+From the candidate views:
+- ""Investment KPI View"" (INVESTMENT_KPI_VW) provides individual investment-level, timestamped KPIs, including unrealized value (exposure), and allows filtering by platform, business unit, region, etc. It is the only view that allows ranking individual investments by exposure.
+- ""Active Deal List"" (ACTIVE_DEAL_LIST_VW) contains only target/expected investment size, not current exposures or valuations, so it is not suitable for current exposure.
+- All other views are aggregated (platform, business unit, sector, region, etc.) and do not provide individual investment-level data, so they cannot be used to rank the top 10 investments.
+
+Therefore, the only relevant view is ""Investment KPI View"" (INVESTMENT_KPI_VW), which should be used to extract the latest exposure (UNREALIZED_VALUE_AED) for each investment, filter for the relevant platform/business unit/region if ""GCC"" can be mapped, and then rank the top 10 by exposure.",0,INVESTMENT_KPI_VW,INVESTMENT_KPI_VW
+15,"At Group level, what is the ITD_RETURN for the 'Direct Investment' investment class (latest)?",[],['MIC_BY_INVESTMENT_CLASS_VW'],MIC_BY_INVESTMENT_CLASS_VW,"The user is asking for the ITD_RETURN (inception-to-date return, i.e., IRR) for the 'Direct Investment' investment class at the Group level, and wants the latest value. 
+
+First, let's clarify the requirements:
+- ""Group level"" means the highest aggregation, i.e., across all of Mubadala, not by platform, business unit, sector, region, or country.
+- The user specifies ""investment class"" and specifically ""Direct Investment"". However, in the candidate views, the investment class values at the group level (MIC_BY_INVESTMENT_CLASS_VW) are ""Fund Portfolio"", ""Private Portfolio"", and ""Public Portfolio"". There is no ""Direct Investment"" as an allowed value at the group level.
+- The domain knowledge lists investment classes as: Private Equity, Real Estate, Infrastructure, Credit, Hedge Funds. ""Direct Investment"" is not a standard investment class in the provided allowed values, but may refer to direct holdings (as opposed to fund investments), which could map to ""Private Portfolio"" or ""Public Portfolio"" depending on context.
+
+Now, let's check the views:
+- MIC Investment Class View (MIC_BY_INVESTMENT_CLASS_VW) aggregates at investment class for all of Mubadala, which matches the ""Group level"" and ""investment class"" requirement. However, its allowed values for INVESTMENT_CLASS are ""Fund Portfolio"", ""Private Portfolio"", ""Public Portfolio"". There is no ""Direct Investment"" value.
+- All other views either aggregate at a lower level (platform, business unit, sector, region, country) or do not aggregate by investment class at the group level.
+- No view offers a ""Direct Investment"" filter at the group level, and none of the allowed values for investment class in MIC_BY_INVESTMENT_CLASS_VW match ""Direct Investment"" directly.
+
+Conclusion:
+- The best possible match is MIC_BY_INVESTMENT_CLASS_VW, but the user will need to map ""Direct Investment"" to one of the available investment class values (""Private Portfolio"" is the most likely, as it typically refers to direct holdings in companies, as opposed to ""Fund Portfolio"" which refers to investments via funds).
+- No other view is appropriate, as they either do not aggregate at group level or do not have investment class as a dimension.",1,MIC_BY_INVESTMENT_CLASS_VW,MIC_BY_INVESTMENT_CLASS_VW
+16,What is the YTD_RETURN for the 'FinTech' platform (latest)?,[],['<NO_VIEWS>'],PLATFORM_KPI_VW,"The user is asking for the latest YTD_RETURN (Year-To-Date Return) for the 'FinTech' platform. To answer this, I need to identify which view(s) can provide YTD_RETURN at the platform level, specifically for a platform named 'FinTech'.
+
+First, I check the list of allowed platform values in the domain knowledge and in the candidate views. The allowed platform values are: Private Equity, Real Assets, ADIC, UAE Investments, Credit and Special Situations. 'FinTech' is not listed as a valid platform in any of the views or in the domain knowledge. 
+
+Next, I review the candidate views:
+- Platform KPI View, Platform Sector View, Platform Investment Class View, Platform Region View, Platform Country View: All these views aggregate by platform, but only for the allowed platforms (not 'FinTech').
+- Investment KPI View and Active Deal List: These are for individual investments or deals, not for platform-level aggregation.
+- MIC KPI View, MIC Sector View, MIC Asset Class View, MIC Region View, MIC Country View: These are for Mubadala-wide or sector/asset class/region/country aggregations, not for a specific platform.
+- Business Unit KPI View, Business Unit Sector View, Business Unit Investment Class View, Business Unit Asset Class View, Business Unit Region View, Business Unit Country View: These are for business unit aggregations, not platforms.
+- Allocations View, Consumption View: These are for capital allocation/consumption, not for returns.
+
+Since 'FinTech' is not a recognized platform in the data model, and no view supports a 'FinTech' platform filter, there is no relevant view to answer this question.",0,PLATFORM_KPI_VW,<NO_VIEWS>
+17,Report the RVPI for the 'BU-Direct' business unit (latest).,[],['BUSINESS_UNIT_KPI_VW'],BUSINESS_UNIT_KPI_VW,"The user is asking for the RVPI (Residual Value to Paid-In Capital) for the 'BU-Direct' business unit, specifically requesting the latest value. The key requirements are:
+- Metric: RVPI
+- Level: Business unit ('BU-Direct')
+- Time: Latest (most recent data)
+
+First, I need to identify which view(s) provide RVPI at the business unit aggregation level. Scanning the candidate views:
+- ""Business Unit KPI View"" (BUSINESS_UNIT_KPI_VW) is specifically for ""aggregated metrics across multiple investments for an individual business unit level only"" and contains the RVPI field.
+- ""Business Unit Sector View"", ""Business Unit Investment Class View"", ""Business Unit Asset Class View"", ""Business Unit Region View"", and ""Business Unit Country View"" all provide RVPI but only when a sector, investment class, asset class, region, or country breakdown is also requested. The question does not request any such breakdown.
+- ""Investment KPI View"" is for individual investments, not for business unit aggregation.
+- ""Platform KPI View"", ""MIC KPI View"", and others are for platform or company-wide aggregation, not business unit.
+- ""Active Deal List"" and ""Consumption View"" do not provide RVPI or business unit aggregation.
+
+Therefore, the ""Business Unit KPI View"" is the correct and only view that directly provides the latest RVPI for a business unit. I also need to check if 'BU-Direct' is a valid value for BUSINESS_UNIT in this view. The allowed values for BUSINESS_UNIT in ""Business Unit KPI View"" do not include 'BU-Direct' exactly, but there are similar names like ""Direct Budget Adjustment - Return (BU)"" and ""DI Budget Adjustment - Return (BU)"". If 'BU-Direct' is a user shorthand, the closest match is likely ""Direct Budget Adjustment - Return (BU)"". However, since the user asked for 'BU-Direct', and the view supports business unit-level queries, this is the best fit.",1,BUSINESS_UNIT_KPI_VW,BUSINESS_UNIT_KPI_VW
+18,"In the 'FinTech' platform, what is the DVPI for 'Direct Investment' investment class (latest)?",[],['<NO_VIEWS>'],<NO_VIEWS>,"The question asks for the DVPI (Distributed to Paid-In Capital) for the 'Direct Investment' investment class within the 'FinTech' platform, specifically requesting the latest value. 
+
+First, I need to identify which view(s) can provide DVPI at the intersection of platform and investment class. The key requirements are:
+- Aggregation at both platform and investment class level (not individual deals, not just platform, not just investment class).
+- Must include a DVPI metric.
+- Must allow filtering by platform ('FinTech') and investment class ('Direct Investment').
+
+Reviewing the candidate views:
+- ""Platform Investment Class View"" (PLATFORM_BY_INVESTMENT_CLASS_VW) is specifically for metrics aggregated at BOTH investment class and platform level. It contains columns for PLATFORM, INVESTMENT_CLASS, and DVPI, and is designed for exactly this type of query.
+- ""Platform KPI View"" is only at the platform level, not broken down by investment class.
+- ""MIC Investment Class View"" is only at the investment class level, not by platform.
+- ""Business Unit Investment Class View"" is at business unit + investment class, not platform.
+- ""Active Deal List"" and ""Investment KPI View"" are for deal-level or individual investment-level data, not for aggregated platform/investment class metrics.
+- The other views (sector, region, asset class, country, etc.) do not match the required aggregation.
+
+However, I must check if 'FinTech' is a valid value for PLATFORM in the ""Platform Investment Class View"". The allowed values for PLATFORM in this view are: [""Credit and Special Situations"", ""MIC Corporate"", ""MIC Legacy Assets"", ""Private Equity"", ""Real Assets"", ""UAE Investments""]. 'FinTech' is not listed as a valid platform value. 
+
+Additionally, for INVESTMENT_CLASS, the allowed values are: [""Fund Portfolio"", ""Private Portfolio"", ""Public Portfolio""]. 'Direct Investment' is not listed as a valid investment class value in this view.
+
+Given these constraints, there is no view that allows filtering by both 'FinTech' as a platform and 'Direct Investment' as an investment class, because neither is an allowed value in the relevant view.
+
+Therefore, none of the available views can answer the question as stated.",1,PLATFORM_BY_INVESTMENT_CLASS_VW,<NO_VIEWS>
+19,"For the 'BU-Direct' business unit, what is the YTD_5_RETURN in the 'Infrastructure' asset class (latest)?",[],['BUSINESS_UNIT_BY_ASSET_CLASS_VW'],BUSINESS_UNIT_BY_ASSET_CLASS_VW,"The user is asking for the ""YTD_5_RETURN"" (5-year year-to-date return) for the 'BU-Direct' business unit in the 'Infrastructure' asset class, and requests the latest value. 
+
+First, let's clarify the requirements:
+- ""BU-Direct"" refers to a business unit (likely ""ADIC-Direct Investments"" or similar, as per allowed values in the views).
+- ""Infrastructure"" is an asset class.
+- The metric is ""YTD_5_RETURN"".
+- The user wants the latest data.
+
+Now, let's match this to the available views:
+- The question requires aggregation at BOTH business unit and asset class level.
+- The only view that provides metrics at BOTH business unit and asset class level is ""Business Unit Asset Class View"" (BUSINESS_UNIT_BY_ASSET_CLASS_VW).
+- This view has columns for BUSINESS_UNIT, ASSET_CLASS_NAME, and YTD_5_RETURN, and allows filtering by business unit and asset class.
+- Other views either aggregate only by business unit, only by asset class, or do not allow the required breakdown.
+- The ""Investment KPI View"" is for individual investments, not for aggregated business unit + asset class metrics.
+- The business unit name in the question (""BU-Direct"") is not an exact match for the allowed values, but ""ADIC-Direct Investments"" is a close match and likely the intended value.
+
+Therefore, the correct view to use is ""Business Unit Asset Class View"".",1,BUSINESS_UNIT_BY_ASSET_CLASS_VW,BUSINESS_UNIT_BY_ASSET_CLASS_VW
+20,"Across investments, compute ITD_RETURN for region 'Europe' in asset class 'Infrastructure' (latest).",[],['INVESTMENT_KPI_VW'],<NO_VIEWS>,"The user is asking for the ITD_RETURN (inception-to-date return, i.e., IRR) for investments in the region 'Europe' and asset class 'Infrastructure', using the latest data. This requires a view that supports filtering by both region and asset class.
+
+Let's analyze the candidate views:
+
+1. **MIC Region View (MIC_BY_REGION_VW)**: Aggregates by region only, not by asset class. Cannot filter by both region and asset class simultaneously.
+2. **MIC Asset Class View (MIC_BY_ASSET_CLASS_VW)**: Aggregates by asset class only, not by region. Cannot filter by both region and asset class simultaneously.
+3. **Platform Region View, Platform Asset Class View, Business Unit Region View, Business Unit Asset Class View, etc.**: All aggregate by only one or two dimensions, but not both region and asset class together.
+4. **Investment KPI View (INVESTMENT_KPI_VW)**: Contains deal-level/timestamped KPIs, including ITD_RETURN, REGION_OF_FUND, and ASSET_CLASS. This view allows filtering by both region ('Europe') and asset class ('Infrastructure') at the investment level, and can be aggregated as needed.
+5. **Active Deal List**: Contains target/expected returns, not actual ITD_RETURN, and is for active deals, not historical performance.
+6. **Consumption View**: Focuses on capital consumption, not returns.
+7. **Other aggregated views (e.g., MIC_BY_COUNTRY_VW, PLATFORM_BY_REGION_VW, etc.)**: None allow simultaneous filtering by both region and asset class.
+
+Therefore, the only view that allows filtering by both region and asset class and provides ITD_RETURN at the investment level is the **Investment KPI View (INVESTMENT_KPI_VW)**. According to its selector, it should be used when the question requires deal-level or historical investment performance and when aggregated views lack the required filter dimensions.",0,INVESTMENT_KPI_VW,INVESTMENT_KPI_VW
+21,Provide the Group-level YTD_3_RETURN (latest).,,['MIC_KPI_VW'],MIC_KPI_VW,"The user is asking for the ""Group-level YTD_3_RETURN (latest)"". ""Group-level"" typically refers to the highest aggregation, i.e., the entire Mubadala group, not broken down by platform, business unit, sector, asset class, region, or country. The metric ""YTD_3_RETURN"" is the 3-year year-to-date internal rate of return, and ""latest"" means the most recent available data.
+
+Reviewing the candidate views:
+- ""MIC KPI View"" is specifically for TIMESTAMPED key performance indicators for investments aggregated across Mubadala WITHOUT mentioning specific platforms, business units, or geographical dimensions. It contains the ""YTD_3_RETURN"" column and is designed for group-level (i.e., Mubadala-wide) metrics.
+- Other views (Platform KPI View, Business Unit KPI View, MIC_BY_SECTOR_VW, etc.) are for breakdowns by platform, business unit, sector, asset class, region, or country, which is not requested here.
+- ""Investment KPI View"" is for individual investments, not group-level.
+- ""Active Deal List"" is for deal-level, not group-level.
+- ""Allocations View"" and ""Consumption View"" are about capital allocation/consumption, not returns.
+
+Therefore, the only view that matches the requirement for group-level, latest YTD_3_RETURN is ""MIC KPI View"".",1,MIC_KPI_VW,MIC_KPI_VW
+22,Provide the Group-level ACTUAL_MOIC (latest).,,['MIC_KPI_VW'],MIC_KPI_VW,"The user is asking for the ""Group-level ACTUAL_MOIC (latest)"". ""Group-level"" in this context refers to the overall Mubadala group, not a specific platform, business unit, sector, region, or investment class. The metric requested is ""ACTUAL_MOIC"", which is the Multiple on Invested Capital, and the user wants the latest value.
+
+To select the correct view:
+- The view must provide group-level (i.e., total Mubadala, not broken down by platform, business unit, sector, etc.) metrics.
+- The view must include the ACTUAL_MOIC field.
+- The view must provide the latest (timestamped) value.
+
+Reviewing the candidate views:
+- ""MIC KPI View"" (MIC_KPI_VW) is specifically described as containing ""TIMESTAMPED key performance indicators for investments aggregated across Mubadala WITHOUT mentioning specific platforms, business units, geographical dimensions"". It is for group-level metrics and includes ACTUAL_MOIC as a column.
+- Other views (Platform KPI View, Business Unit KPI View, etc.) are for platform, business unit, or other breakdowns, which are not requested.
+- ""Investment KPI View"" is for individual investments, not group-level.
+- ""Active Deal List"" is for deal-level, not group-level.
+- The other ""MIC BY ..."" views are for sector, asset class, region, country, or investment class breakdowns, which are not requested.
+
+Therefore, the only correct view for group-level, latest ACTUAL_MOIC is ""MIC KPI View"" (MIC_KPI_VW).",1,MIC_KPI_VW,MIC_KPI_VW
+23,What is the REFORECAST_RETURN for the 'FinTech' platform (latest)?,,['<NO_VIEWS>'],<NO_VIEWS>,"The user is asking for the ""REFORECAST_RETURN"" (forecasted IRR at exit) for the 'FinTech' platform, specifically requesting the latest value. First, I need to determine if 'FinTech' is a valid platform in the context of Mubadala's data model. According to the domain knowledge and the allowed values in the candidate views, the valid platforms are: Private Equity, Real Assets, ADIC, UAE Investments, and Credit and Special Situations. 'FinTech' is not listed as a valid platform; it is more likely a sector, industry, or thematic area, not a platform.
+
+The views that provide REFORECAST_RETURN at the platform level are:
+- Platform KPI View (aggregated at platform level)
+- Platform Investment Class View (aggregated at both platform and investment class)
+- Platform Sector View (aggregated at both platform and sector)
+- Platform Region View (aggregated at both platform and region)
+- Platform Country View (aggregated at both platform and country)
+
+However, none of these views list 'FinTech' as an allowed value for PLATFORM. Instead, 'FinTech' might be represented as a sector, industry, or business unit, but not as a platform.
+
+Since the question asks for a platform that does not exist in the data model, and none of the views support 'FinTech' as a platform, there is no relevant view to answer this question directly.",1,PLATFORM_KPI_VW,<NO_VIEWS>
+24,What is the TARGET_RETURN for the 'BU-Direct' business unit (latest)?,,['<NO_VIEWS>'],<NO_VIEWS>,"The user is asking for the ""TARGET_RETURN"" for the 'BU-Direct' business unit, specifically requesting the latest value. The term ""TARGET_RETURN"" is a key performance indicator (KPI) and is typically an aggregate metric at the business unit level, not at the individual deal level. The question does not mention a specific deal, platform, sector, asset class, or region, but is focused on the business unit as a whole.
+
+Reviewing the candidate views:
+- ""Business Unit KPI View"" (BUSINESS_UNIT_KPI_VW) is designed for aggregated KPIs at the business unit level and includes columns for various return metrics (ITD_RETURN, YTD_RETURN, etc.), but does not have a column named ""TARGET_RETURN"". It is the correct view for business unit-level KPIs.
+- ""Investment KPI View"" (INVESTMENT_KPI_VW) contains ""TARGET_RETURN"" but is for individual investments/deals, not for business unit aggregates.
+- ""Active Deal List"" is for current/active deals and their target metrics, not for business unit aggregates.
+- Other views (Platform KPI, MIC KPI, sector, region, asset class, etc.) are not relevant because the question is not about platforms, sectors, regions, or asset classes.
+
+However, the business unit name 'BU-Direct' does not appear in the allowed values for BUSINESS_UNIT in any of the business unit-level views. The closest matches are ""ADIC-Direct Investments"" and ""Direct Budget Adjustment - Return (BU)"", but not ""BU-Direct"". If ""BU-Direct"" is a user shorthand for ""ADIC-Direct Investments"" or another business unit, clarification would be needed. If not, and if ""BU-Direct"" is not present in the allowed values, then no view can directly answer the question.
+
+Given the above, the correct view for business unit-level target returns would be ""Business Unit KPI View"" if the business unit existed in the allowed values. Since ""BU-Direct"" is not present, there is no relevant view.",1,BUSINESS_UNIT_KPI_VW,BUSINESS_UNIT_KPI_VW
+25,List the top 10 investments in the USA by YTD_RETURN (latest).,,['INVESTMENT_KPI_VW'],INVESTMENT_KPI_VW,"The user is asking for a list of the top 10 investments in the USA by YTD_RETURN (latest). This requires:
+- Investment-level (not aggregate) data, as the user wants a list of individual investments, not an aggregate or summary by country, platform, or class.
+- The ability to filter by country (USA), which is ""United States of America"" or its ISO codes.
+- The ability to sort and select by YTD_RETURN (year-to-date return), and to get the latest data for each investment.
+
+Reviewing the candidate views:
+- ""Investment KPI View"" (INVESTMENT_KPI_VW) contains timestamped KPIs for each investment, including YTD_RETURN, country (with ISO codes for filtering), and allows for selection of the latest data per investment. It is specifically designed for questions about the performance of individual investments, and its selector says to use it for historical deal/investment-level queries, especially when filtering by geography and return metrics.
+- ""Active Deal List"" (ACTIVE_DEAL_LIST_VW) contains target/expected returns and deal pipeline data, but not actual YTD_RETURN or realized performance. It is not suitable for listing top investments by actual YTD_RETURN.
+- All other views are for aggregated data (by country, platform, sector, etc.) and do not provide investment-level granularity.
+
+Therefore, the only view that meets all requirements (investment-level, filterable by country, sortable by YTD_RETURN, and provides latest data) is ""Investment KPI View"" (INVESTMENT_KPI_VW).",1,INVESTMENT_KPI_VW,INVESTMENT_KPI_VW
+26,Which region had the highest YTD_RETURN last year?,,['MIC_BY_REGION_VW'],MIC_BY_REGION_VW,"The user is asking: ""Which region had the highest YTD_RETURN last year?"" This requires:
+- Aggregated data at the region level (not country, sector, business unit, or platform).
+- The metric of interest is YTD_RETURN (Year-To-Date Return), specifically for the previous year (i.e., last year).
+- The answer should identify the region with the highest YTD_RETURN.
+
+From the candidate views:
+- MIC Region View (MIC_BY_REGION_VW) is specifically designed for ""aggregated metrics at the region level only for all of Mubadala's investments."" It contains the columns REGION, YEAR, and YTD_RETURN, which are exactly what is needed to answer the question.
+- Platform Region View and Business Unit Region View both aggregate by region but also by platform or business unit, which is not requested by the user.
+- Investment KPI View and Active Deal List are for individual investments/deals, not for region-level aggregation.
+- All other views either aggregate by other dimensions (sector, asset class, investment class, country, business unit, platform) or require breakdowns not requested here.
+
+Therefore, the MIC Region View is the most direct and appropriate source for this query.",1,MIC_BY_REGION_VW,MIC_BY_REGION_VW
+27,Which GICS sector in Asia had the lowest ITD_RETURN last year?,,['BUSINESS_UNIT_BY_SECTOR_VW'],"MIC_BY_REGION_VW, MIC_BY_SECTOR_VW","The question asks: ""Which GICS sector in Asia had the lowest ITD_RETURN last year?"" 
+
+Key requirements:
+- ""GICS sector"": We need a view that aggregates by GICS sector (Level 1 Global Industry Classification Standard).
+- ""in Asia"": We need to filter by the Asia business unit or region.
+- ""lowest ITD_RETURN"": We need a view that provides ITD_RETURN (inception-to-date return) at the sector level, and allows us to filter for Asia.
+- ""last year"": We need a view with timestamped/yearly data, so we can select the most recent year.
+
+Reviewing the candidate views:
+- MIC Sector View: Aggregates by sector, but does not allow filtering by region or business unit (Asia).
+- Business Unit Sector View: Aggregates by BOTH sector and business unit. The BUSINESS_UNIT column includes ""Asia"" as an allowed value, and GICS_SECTOR is present. ITD_RETURN is available. This view allows us to find the ITD_RETURN for each GICS sector within the Asia business unit for a given year.
+- Investment KPI View: Has deal-level data, but the question is about sector-level aggregation in Asia, not individual deals.
+- MIC Region View, Platform Region View, Business Unit Region View: These aggregate by region, not by sector.
+- Platform Sector View: Aggregates by sector and platform, but not by business unit or region.
+- Business Unit KPI View: Aggregates by business unit, but not by sector.
+- Other views (Active Deal List, Allocations, Consumption, etc.): Not relevant, as they do not provide sector-level aggregation or the required filters.
+
+Therefore, the only view that allows us to answer ""Which GICS sector in Asia had the lowest ITD_RETURN last year?"" is the Business Unit Sector View, as it provides ITD_RETURN by both GICS sector and business unit (Asia).",0,INVESTMENT_KPI_VW,INVESTMENT_KPI_VW
+28,What countries contributed the most to Europe's YTD_RETURN last year? Return the top 3.,,['MIC_BY_COUNTRY_VW'],MIC_BY_COUNTRY_VW,"The user is asking for the top 3 countries that contributed the most to Europe's YTD_RETURN last year. This requires:
+- Aggregation at the country level (to rank countries).
+- Filtering for countries within Europe.
+- Using YTD_RETURN for the previous year (so, filter by YEAR = last year and RECORD_TYPE = 'YTD').
+- The metric of interest is YTD_RETURN.
+
+Among the candidate views:
+- MIC_BY_COUNTRY_VW: Aggregates at the country level and provides YTD_RETURN, YEAR, and country fields. It is designed for country-level breakdowns and is the most direct fit for this question.
+- PLATFORM_BY_COUNTRY_VW and BUSINESS_UNIT_BY_COUNTRY_VW: These provide country-level data but also require platform or business unit breakdowns, which the question does not request.
+- INVESTMENT_KPI_VW: Provides deal-level data, but the question is about aggregated country-level results, not individual investments.
+- MIC_BY_REGION_VW: Aggregates at the region level, but the user wants a country-level breakdown within Europe, not just the region as a whole.
+
+Therefore, the best view is MIC_BY_COUNTRY_VW, as it allows us to:
+- Filter for countries in Europe (by cross-referencing the COUNTRY field with a list of European countries).
+- Aggregate and rank by YTD_RETURN for last year.
+- Return the top 3 countries.
+
+No other view is as direct or appropriate for this query.",1,INVESTMENT_KPI_VW,INVESTMENT_KPI_VW
+29,"For Group 'Direct Investment' investment class, provide TARGET_RETURN and ACTUAL_MOIC (latest).",,['BUSINESS_UNIT_BY_INVESTMENT_CLASS_VW'],<NO_VIEWS>,"The user is asking for TARGET_RETURN and ACTUAL_MOIC (latest) for the ""Direct Investment"" investment class, specifically for the ""Group"" level. However, ""Direct Investment"" is not a standard investment class in the provided views; instead, it is likely a deployment model or business unit (e.g., ""ADIC-Direct Investments"" as a business unit). The question is ambiguous, but the intent is to get performance metrics (TARGET_RETURN and ACTUAL_MOIC) for direct investments at a group/aggregate level.
+
+Let's break down the requirements:
+- The user wants aggregate metrics (not deal-level), so views with individual deal data (like ""Active Deal List"" or ""Investment KPI View"") are not appropriate unless no aggregate view can provide the required filter.
+- The user is not asking for a specific platform, sector, asset class, or region, but for ""Group 'Direct Investment' investment class."" This suggests a need for a view that aggregates by investment class, possibly at the business unit or group level.
+- The only views that aggregate by investment class are:
+  - MIC Investment Class View (MIC_BY_INVESTMENT_CLASS_VW): Aggregates at investment class for all Mubadala, but its allowed values for INVESTMENT_CLASS are ""Fund Portfolio"", ""Private Portfolio"", ""Public Portfolio""—not ""Direct Investment"".
+  - Platform Investment Class View (PLATFORM_BY_INVESTMENT_CLASS_VW): Aggregates by both platform and investment class, but again, investment class values are ""Fund Portfolio"", ""Private Portfolio"", ""Public Portfolio"".
+  - Business Unit Investment Class View (BUSINESS_UNIT_BY_INVESTMENT_CLASS_VW): Aggregates by business unit and investment class, with allowed values including ""ADIC-Direct Investments"" for BUSINESS_UNIT and ""Fund Portfolio"", ""Private Portfolio"", ""Public Portfolio"" for INVESTMENT_CLASS.
+
+Given the above, the closest match is ""Business Unit Investment Class View"", where ""ADIC-Direct Investments"" is a business unit, and the investment class can be filtered as needed. This view provides aggregate metrics (including ITD_RETURN, YTD_RETURN, ACTUAL_MOIC, etc.) at the intersection of business unit and investment class.
+
+Therefore, the best view to select is BUSINESS_UNIT_BY_INVESTMENT_CLASS_VW, as it allows filtering by business unit (""ADIC-Direct Investments"") and investment class, and provides the required metrics.
+
+If the user meant ""Direct Investment"" as a deployment model, the only view that supports filtering by deployment model is ""Investment KPI View"" at the deal level, but since the question is for group/aggregate, the business unit aggregate view is preferred.",0,MIC_BY_INVESTMENT_CLASS_VW,MIC_BY_INVESTMENT_CLASS_VW

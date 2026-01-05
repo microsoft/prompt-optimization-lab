@@ -1,0 +1,46 @@
+{
+  "total_examples": 30,
+  "missing_values": {
+    "question_id": 0,
+    "question": 0,
+    "available_views": 0,
+    "conversation_history": 0,
+    "reasoning": 0,
+    "selected_views": 0
+  },
+  "duplicate_questions": 0,
+  "with_conversation_history": 30,
+  "with_selected_views": 25,
+  "avg_views_per_example": 1.1333333333333333,
+  "metadata_stats": {
+    "total_views": 21,
+    "with_descriptions": 21,
+    "with_selectors": 21,
+    "with_columns": 21,
+    "avg_columns_per_view": 26.333333333333332,
+    "avg_selectors_per_view": 331.3333333333333,
+    "view_entities": [
+      "ACTIVE_DEAL_LIST_VW",
+      "INVESTMENT_KPI_VW",
+      "MIC_KPI_VW",
+      "PLATFORM_KPI_VW",
+      "BUSINESS_UNIT_KPI_VW",
+      "BUSINESS_UNIT_BY_SECTOR_VW",
+      "MIC_BY_INVESTMENT_CLASS_VW",
+      "PLATFORM_BY_INVESTMENT_CLASS_VW",
+      "BUSINESS_UNIT_BY_INVESTMENT_CLASS_VW",
+      "MIC_BY_SECTOR_VW",
+      "PLATFORM_BY_SECTOR_VW",
+      "MIC_BY_ASSET_CLASS_VW",
+      "BUSINESS_UNIT_BY_ASSET_CLASS_VW",
+      "MIC_BY_REGION_VW",
+      "PLATFORM_BY_REGION_VW",
+      "BUSINESS_UNIT_BY_REGION_VW",
+      "MIC_BY_COUNTRY_VW",
+      "PLATFORM_BY_COUNTRY_VW",
+      "BUSINESS_UNIT_BY_COUNTRY_VW",
+      "ALLOCATION_VW",
+      "CONSUMPTION_VW"
+    ]
+  }
+}

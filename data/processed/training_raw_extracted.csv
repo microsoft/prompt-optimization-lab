@@ -1,0 +1,31 @@
+question_id,question,conversation_history,selected_views
+1,What is MICs current exposure in the USA in PE?,[],"MIC_BY_ASSET_CLASS_VW, MIC_BY_COUNTRY_VW"
+2,What is MICs current exposure in the GCC in Private Equity?,[],"MIC_BY_ASSET_CLASS_VW, MIC_BY_REGION_VW"
+3,"In FinTech, report the current exposure for Europe for Group (MIC).",[],"MIC_BY_REGION_VW, MIC_BY_SECTOR_VW"
+4,"In Pharmaceuticals, report the current exposures across all platforms and units.",[],"BUSINESS_UNIT_BY_SECTOR_VW, PLATFORM_BY_SECTOR_VW"
+5,Report the exposures for Real Assets in the UAE.,[],"MIC_BY_ASSET_CLASS_VW, MIC_BY_COUNTRY_VW"
+6,Country: Report Group exposure by country.,[],MIC_BY_COUNTRY_VW
+7,Region: Report Group exposure by region.,[],MIC_BY_REGION_VW
+8,Asset Class: Report Group exposure by asset class.,[],MIC_BY_ASSET_CLASS_VW
+9,GICS: Report Group exposure by GICS sector.,[],MIC_BY_SECTOR_VW
+10,Investment Class: Report Group exposure by investment class.,[],MIC_BY_INVESTMENT_CLASS_VW
+11,Exposure in Europe of Real Assets (Platform) and Infrastructure (Asset Class).,[],"MIC_BY_ASSET_CLASS_VW, PLATFORM_BY_REGION_VW"
+12,Calculate the exposures for the USA in Real Assets and Infrastructure.,[],"MIC_BY_ASSET_CLASS_VW, MIC_BY_COUNTRY_VW"
+13,What is the exposure for Direct Investment in the UAE and how has it changed vs last year?,[],"MIC_BY_COUNTRY_VW, PLATFORM_BY_COUNTRY_VW"
+14,5Y CAGR: Calculate the exposures for the USA for the past 5 years and report the CAGR.,[],MIC_BY_COUNTRY_VW
+15,Top 10: Report the current exposures for the GCC and rank the top 10 investments.,[],MIC_BY_REGION_VW
+16,"At Group level, what is the ITD_RETURN for the 'Direct Investment' investment class (latest)?",[],MIC_BY_INVESTMENT_CLASS_VW
+17,What is the YTD_RETURN for the 'FinTech' platform (latest)?,[],PLATFORM_KPI_VW
+18,Report the RVPI for the 'BU-Direct' business unit (latest).,[],BUSINESS_UNIT_KPI_VW
+19,"In the 'FinTech' platform, what is the DVPI for 'Direct Investment' investment class (latest)?",[],<NO_VIEWS>
+20,"For the 'BU-Direct' business unit, what is the YTD_5_RETURN in the 'Infrastructure' asset class (latest)?",[],BUSINESS_UNIT_BY_ASSET_CLASS_VW
+21,"Across investments, compute ITD_RETURN for region 'Europe' in asset class 'Infrastructure' (latest).",[],<NO_VIEWS>
+22,Provide the Group-level YTD_3_RETURN (latest).,[],MIC_KPI_VW
+23,Provide the Group-level ACTUAL_MOIC (latest).,[],MIC_KPI_VW
+24,What is the REFORECAST_RETURN for the 'FinTech' platform (latest)?,[],<NO_VIEWS>
+25,What is the TARGET_RETURN for the 'BU-Direct' business unit (latest)?,[],<NO_VIEWS>
+26,List the top 10 investments in the USA by YTD_RETURN (latest).,[],INVESTMENT_KPI_VW
+27,Which region had the highest YTD_RETURN last year?,[],MIC_BY_REGION_VW
+28,Which GICS sector in Asia had the lowest ITD_RETURN last year?,[],"MIC_BY_REGION_VW, MIC_BY_SECTOR_VW"
+29,What countries contributed the most to Europe's YTD_RETURN last year? Return the top 3.,[],MIC_BY_COUNTRY_VW
+30,"For Group 'Direct Investment' investment class, provide TARGET_RETURN and ACTUAL_MOIC (latest).",[],<NO_VIEWS>
