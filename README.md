@@ -42,6 +42,7 @@ This project demonstrates **automated prompt optimization** for a database view 
 
    ```powershell
    uv sync
+   ```
 
 ## Project Structure
     prompt-optimization-lab/
