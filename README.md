@@ -40,13 +40,8 @@ This project demonstrates **automated prompt optimization** for a database view 
 
 ### Environment Initialization
 
-1. **Initialize the project** (if starting fresh):
    ```powershell
-   uv init .
-
-2. Add development dependencies for Jupyter notebooks:
-    ```powershell
-    uv add --dev jupyter ipykernel
+   uv sync
 
 ## Project Structure
     prompt-optimization-lab/
@@ -59,17 +54,17 @@ This project demonstrates **automated prompt optimization** for a database view 
     └── .venv/ 
 
 ## Usage
-# Run single optimizer
+### Run single optimizer
 uv run python scripts/optimize_view_selector.py --optimizer labeledfewshot --k 10
 
-# Run GEPA with custom sizes
+### Run GEPA with custom sizes
 uv run python src/optimize_view_selector.py --optimizer gepa --train-size 20 --val-size 10
 
-# Run Bootstrap
+### Run Bootstrap
 uv run python scripts/optimize_view_selector.py --optimizer bootstrap --max-demos 10
 
-# Run all optimizers
+### Run all optimizers
 uv run python scripts/optimize_view_selector.py --optimizer all
 
-# Custom output directory
+### Custom output directory
 uv run python scripts/optimize_view_selector.py --optimizer all --output-dir results/exp1
