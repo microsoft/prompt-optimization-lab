@@ -1,0 +1,46 @@
+questionID,question,expected_views
+1,What is the YTD return of  private investment class ?,MIC_BY_INVESTMENT_CLASS_VW
+2,What is our exposure to Europe?,MIC_BY_REGION_VW
+3,What is ADIC's exposure?,MIC_KPI_VW
+4,What is the exposure of the UAE Investments Platform?,PLATFORM_KPI_VW
+5,What was the exposure of the UAE investments platform in 2023,PLATFORM_KPI_VW
+6,What is our exposure to Blackrock?,INVESTMENT_KPI_VW
+7,What is our exposure to public equity asset class?,MIC_BY_ASSET_CLASS_VW
+8,What is the exposure of Mubadala Group?,MIC_KPI_VW
+9,What is the exposure of UAE investments platform?,PLATFORM_KPI_VW
+10,What is the exposure to Private Equity Platform?,PLATFORM_KPI_VW
+11,How was the exposure to the Private Equity platform evolved over the past 5 years?,PLATFORM_KPI_VW
+12,What is the exposure to the Real Assets platform?,PLATFORM_KPI_VW
+13,What is the exposure to the credit and special situations platform?,PLATFORM_KPI_VW
+14,what is the exposure to the MIC corporate platform?,PLATFORM_KPI_VW
+15,What is the exposure to the UAE Real Estate business unit,BUSINESS_UNIT_KPI_VW
+16,what is the exposure to the healthcare business unit?,BUSINESS_UNIT_KPI_VW
+17,What is the exposure to the Infrastructure business unit?,BUSINESS_UNIT_KPI_VW
+18,Exposure to Real Estate business unit,BUSINESS_UNIT_KPI_VW
+19,Exposure to UAE clusters business unit,BUSINESS_UNIT_KPI_VW
+20,What is the exposure to North america region over past 5 years,MIC_BY_REGION_VW
+21,What is Private Equity platform's exposure to UAE country?,PLATFORM_BY_COUNTRY_VW
+22,What is Private Equity platform's exposure to Europe region?,PLATFORM_BY_REGION_VW
+23,What is the breakdown of Private Equity Platform by region,PLATFORM_BY_REGION_VW
+24,What is the breakdown of UAE Platform by region,PLATFORM_BY_REGION_VW
+25,What is the breakdown of ADIC Platform by region,PLATFORM_BY_REGION_VW
+26,Breakdown of the portfolio by asset class,MIC_BY_ASSET_CLASS_VW
+27,Breakdown of the portfolio by GICS Sector,MIC_BY_SECTOR_VW
+28,What is the portfolio's exposure to Blackrock?,INVESTMENT_KPI_VW
+29,What are the Portfolio's largest partners by exposure?,INVESTMENT_KPI_VW
+30,What is the portfolio's exposure to KKR?,INVESTMENT_KPI_VW
+31,What are the top 10 investments by exposure in Real Assets platform?,INVESTMENT_KPI_VW
+32,What are the largest 10 investments in Real Assets platform?,INVESTMENT_KPI_VW
+33,What are the Portfolio's largest investments in Europe?,INVESTMENT_KPI_VW
+34,What is our exposure to listed equity asset class?,MIC_BY_ASSET_CLASS_VW
+35,What are the top 10 investments by exposure in the listed equity asset class?,INVESTMENT_KPI_VW
+36,what is MIC's exposure to Credit Investments?,BUSINESS_UNIT_KPI_VW
+37,What is MIC's exposure split by new and existing vintage investments ?,INVESTMENT_KPI_VW
+38,What is our exposure to North America?,MIC_BY_REGION_VW
+39,What is MIC's % exposure by investment class,MIC_BY_INVESTMENT_CLASS_VW
+40,Which Region in MIC had the highest increase in exposures from beginning of 2025 to YTD 2025?,MIC_BY_REGION_VW
+41,"What are the top 5 investments in the UAE Platform by Exposure? Provide a table, showing their UVs as well",INVESTMENT_KPI_VW
+42,What are our largest 10 investments in the Corporate Platform,INVESTMENT_KPI_VW
+43,What is MIC's exposure to Public Investments in Europe?,BUSINESS_UNIT_BY_REGION_VW
+44,Which region had the highest growth rate in 2024?,MIC_BY_REGION_VW
+45,What were the Platform 1 year returns for 2024?,PLATFORM_KPI_VW
