@@ -16,7 +16,6 @@ from pathlib import Path
 from typing import Dict, Any, Optional
 
 import dspy
-from dspy.teleprompt import LabeledFewShot, GEPA, BootstrapFewShot
 
 from src.modules import ViewSelectorModule
 from src.data_loader import load_golden_dataset, load_snowflake_views, create_dspy_examples
@@ -26,37 +25,8 @@ from src.metrics import (
     calculate_metrics,
     print_evaluation_report
 )
+from src.optimizer.base import OptimizerFactory
 from src.evaluator import ViewSelectorEvaluator
-
-
-class OptimizerFactory:
-    """Factory for creating DSPy optimizers."""
-    
-    @staticmethod
-    def create_labeledfewshot(config: Dict[str, Any]):
-        """Create LabeledFewShot optimizer."""
-        return LabeledFewShot(k=config.get('k', 10))
-    
-    @staticmethod
-    def create_gepa(config: Dict[str, Any], reflection_lm):
-        """Create GEPA optimizer."""
-        return GEPA(
-            metric=soft_view_selector_metric,
-            reflection_lm=reflection_lm,
-            num_threads=config.get('num_threads', 1),
-            max_full_evals=config.get('max_full_evals', 5)
-        )
-    
-    @staticmethod
-    def create_bootstrap(config: Dict[str, Any]):
-        """Create BootstrapFewShot optimizer."""
-        return BootstrapFewShot(
-            metric=strict_view_selector_metric,
-            max_bootstrapped_demos=config.get('max_bootstrapped_demos', 8),
-            max_labeled_demos=config.get('max_labeled_demos', 8),
-            max_rounds=config.get('max_rounds', 5),
-            max_errors=config.get('max_errors', 1)
-        )
 
 
 class ViewSelectorOptimizer:
@@ -72,7 +42,7 @@ class ViewSelectorOptimizer:
         # Configure DSPy
         self.main_lm = dspy.LM(model="azure/gpt-4o", temperature=0.0, max_tokens=2000)
         dspy.configure(lm=self.main_lm)
-        
+        self.optimizer_factory = OptimizerFactory()
         self.reflection_lm = dspy.LM(model="azure/gpt-4.1", temperature=1.0, max_tokens=10000)
         
         # Load data
@@ -129,10 +99,9 @@ class ViewSelectorOptimizer:
         
         # Create fresh module
         student = ViewSelectorModule(candidate_views=self.snowflake_views)
-        
         # Create optimizer
-        optimizer = OptimizerFactory.create_labeledfewshot(config)
-        
+        optimizer = self.optimizer_factory.create_labeledfewshot(config)
+
         # Compile
         print("🔧 Compiling...")
         start_time = time.time()
@@ -167,7 +136,7 @@ class ViewSelectorOptimizer:
         student = ViewSelectorModule(candidate_views=self.snowflake_views)
         
         # Create optimizer
-        optimizer = OptimizerFactory.create_gepa(config, self.reflection_lm)
+        optimizer = self.optimizer_factory.create_gepa(config, self.reflection_lm)
         
         # Compile
         print("🔧 Compiling (this may take several minutes)...")
@@ -208,7 +177,7 @@ class ViewSelectorOptimizer:
         student = ViewSelectorModule(candidate_views=self.snowflake_views)
         
         # Create optimizer
-        optimizer = OptimizerFactory.create_bootstrap(config)
+        optimizer = self.optimizer_factory.create_bootstrap(config)
         
         # Compile
         print("🔧 Compiling...")
@@ -254,11 +223,9 @@ class ViewSelectorOptimizer:
     def _save_results(self, module, results: Dict[str, Any], optimizer_name: str):
         """Save module and results."""
         # Save module
-        module_path = self.modules_dir / f"{optimizer_name}_module.pkl"
+        module_path = self.modules_dir / f"{optimizer_name}_module.json"
         try:
-            with open(module_path, 'wb') as f:
-                pickle.dump(module, f)
-            print(f"✅ Saved module to: {module_path}")
+            module.save(module_path)
         except Exception as e:
             print(f"⚠️ Could not save module: {e}")
         

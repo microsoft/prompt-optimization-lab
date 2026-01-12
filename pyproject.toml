@@ -26,6 +26,7 @@ dependencies = [
     "azure-core>=1.35.1",
     "typing-extensions>=4.15.0",
     "pydantic>=2.12.5",
+    "agent-framework>=1.0.0b260106",
 ]
 
 [dependency-groups]
