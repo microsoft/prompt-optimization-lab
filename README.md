@@ -56,16 +56,16 @@ This project demonstrates **automated prompt optimization** for a database view 
 
 ## Usage
 ### Run single optimizer
-uv run python scripts/optimize_view_selector.py --optimizer labeledfewshot --k 10
+uv run python src/optimizer/optimize_view_selector.py --optimizer labeledfewshot --k 10
 
 ### Run GEPA with custom sizes
-uv run python src/optimize_view_selector.py --optimizer gepa --train-size 20 --val-size 10
+uv run python src/optimizer/optimize_view_selector.py --optimizer gepa --train-size 20 --val-size 10
 
 ### Run Bootstrap
-uv run python scripts/optimize_view_selector.py --optimizer bootstrap --max-demos 10
+uv run python src/optimizer/optimize_view_selector.py --optimizer bootstrap --max-demos 10
 
 ### Run all optimizers
-uv run python scripts/optimize_view_selector.py --optimizer all
+uv run python src/optimizer/optimize_view_selector.py --optimizer all
 
 ### Custom output directory
-uv run python scripts/optimize_view_selector.py --optimizer all --output-dir results/exp1
+uv run python src/optimizer/optimize_view_selector.py --optimizer all --output-dir results/exp1
