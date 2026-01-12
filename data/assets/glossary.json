@@ -1,0 +1,33 @@
+{
+  "acronyms": {
+    "adic": "abu dhabi investment council",
+    "pe": "private equity",
+    "css": "credit and special situations",
+    "infra": "infrastructure",
+    "Corp": "corporate",
+    "MIC": "mubadala investment company"
+  },
+  "financial_metrics": {
+    "largest investments": {
+      "column": "UNREALIZED_VALUE",
+      "synonyms": ["biggest investments", "top investments by value"]
+    },
+    "top deployments": {
+      "column": "ITD_CASH_INVESTED",
+      "synonyms": ["largest deployments", "biggest cash investments"]
+    },
+    "exposure": {
+      "column": "UNREALIZED_VALUE",
+      "synonyms": ["investment exposure", "current exposure"]
+    },
+    "IC Case IRR": {
+      "column": "TARGET_RETURN",
+      "alternate_column": "TARGET_IRR",
+      "synonyms": ["Investment Committee IRR", "target IRR"]
+    },
+    "IC Case MOIC": {
+      "column": "TARGET_MOIC",
+      "synonyms": ["Investment Committee MOIC", "target MOIC"]
+    }
+  }
+}

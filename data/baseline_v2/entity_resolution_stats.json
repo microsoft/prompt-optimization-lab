@@ -1,0 +1,6 @@
+{
+  "total_examples": 33,
+  "examples_with_entities": 18,
+  "examples_without_entities": 15,
+  "avg_entities_per_query": 0.6666666666666666
+}
